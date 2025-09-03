@@ -77,12 +77,12 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
             <Link href="/" className="flex items-center group" data-testid="logo-link">
-              <div className="p-2 rounded-xl gradient-primary mr-3 group-hover:shadow-glow transition-all duration-300">
-                <Zap className="h-6 w-6 text-white" />
+              <div className="p-3 rounded-xl gradient-primary mr-3 group-hover:shadow-glow group-hover:scale-110 transition-all duration-300 animate-glow-pulse">
+                <Zap className="h-8 w-8 text-white drop-shadow-lg" />
               </div>
               <div>
-                <span className="text-2xl font-bold font-poppins text-gradient">TechVantage</span>
-                <span className="text-sm text-muted-foreground ml-2 block -mt-1">Solutions</span>
+                <span className="text-3xl font-black font-poppins text-gradient drop-shadow-lg tracking-tight">TechVantage</span>
+                <span className="text-base font-bold text-muted-foreground ml-2 block -mt-1 drop-shadow-sm">Solutions</span>
               </div>
             </Link>
           </div>
@@ -92,7 +92,7 @@ export default function Header() {
             <div className="ml-10 flex items-center space-x-1">
               <Link 
                 href="/" 
-                className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
+                className={`px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 hover-lift ${
                   isActive("/") 
                     ? "text-primary bg-primary/10 shadow-glow" 
                     : "text-foreground hover:text-primary hover:bg-primary/5"
@@ -104,7 +104,7 @@ export default function Header() {
               
               <DropdownMenu>
                 <DropdownMenuTrigger 
-                  className="text-foreground hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 flex items-center" 
+                  className="text-foreground hover:text-primary hover:bg-primary/5 px-4 py-2 rounded-lg text-sm font-bold transition-all duration-300 flex items-center hover-lift" 
                   data-testid="nav-services"
                 >
                   Services <ChevronDown className="ml-1 h-4 w-4" />
@@ -187,7 +187,7 @@ export default function Header() {
             
             <Button 
               asChild 
-              className="modern-button px-6 py-2 rounded-xl font-medium shadow-lg hover:shadow-glow-secondary transition-all duration-300"
+              className="modern-button px-6 py-2 rounded-xl font-bold shadow-lg hover:shadow-glow-secondary hover-lift transition-all duration-300"
               data-testid="button-get-quote"
             >
               <Link href="/contact">Get Quote</Link>
@@ -223,12 +223,12 @@ export default function Header() {
                   <div className="p-6 border-b border-border/20">
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center">
-                        <div className="p-2 rounded-xl gradient-primary mr-3">
-                          <Zap className="h-5 w-5 text-white" />
+                        <div className="p-3 rounded-xl gradient-primary mr-3 animate-glow-pulse">
+                          <Zap className="h-6 w-6 text-white drop-shadow-lg" />
                         </div>
                         <div>
-                          <span className="text-lg font-bold text-gradient">TechVantage</span>
-                          <span className="text-xs text-muted-foreground block -mt-0.5">Solutions</span>
+                          <span className="text-xl font-black text-gradient drop-shadow-lg">TechVantage</span>
+                          <span className="text-sm font-bold text-muted-foreground block -mt-0.5 drop-shadow-sm">Solutions</span>
                         </div>
                       </div>
                     </div>

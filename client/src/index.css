@@ -175,8 +175,9 @@
 
 /* Modern Futuristic Animations */
 @keyframes float {
-  0%, 100% { transform: translateY(0px); }
-  50% { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  33% { transform: translateY(-15px) rotate(1deg); }
+  66% { transform: translateY(-5px) rotate(-1deg); }
 }
 
 @keyframes glow-pulse {
@@ -190,12 +191,70 @@
 
 @keyframes slide-in-right {
   from {
-    transform: translateX(100px);
+    transform: translateX(100px) scale(0.9);
     opacity: 0;
   }
   to {
-    transform: translateX(0);
+    transform: translateX(0) scale(1);
     opacity: 1;
+  }
+}
+
+@keyframes particle-float {
+  0%, 100% { 
+    transform: translateY(0px) translateX(0px) rotate(0deg);
+    opacity: 0.3;
+  }
+  25% { 
+    transform: translateY(-20px) translateX(10px) rotate(90deg);
+    opacity: 0.7;
+  }
+  50% { 
+    transform: translateY(-10px) translateX(-5px) rotate(180deg);
+    opacity: 0.5;
+  }
+  75% { 
+    transform: translateY(-30px) translateX(-10px) rotate(270deg);
+    opacity: 0.8;
+  }
+}
+
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes morph {
+  0%, 100% { 
+    border-radius: 50% 20% 40% 60%;
+    transform: rotate(0deg);
+  }
+  25% { 
+    border-radius: 20% 60% 30% 70%;
+    transform: rotate(90deg);
+  }
+  50% { 
+    border-radius: 60% 40% 60% 20%;
+    transform: rotate(180deg);
+  }
+  75% { 
+    border-radius: 40% 70% 20% 50%;
+    transform: rotate(270deg);
+  }
+}
+
+@keyframes text-shimmer {
+  0% {
+    background-position: -200% center;
+  }
+  100% {
+    background-position: 200% center;
   }
 }
 
@@ -236,6 +295,55 @@
   animation: float 6s ease-in-out infinite;
 }
 
+.animate-particle-float {
+  animation: particle-float 8s ease-in-out infinite;
+}
+
+.animate-pulse-ring {
+  animation: pulse-ring 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-morph {
+  animation: morph 12s ease-in-out infinite;
+}
+
+.text-shimmer {
+  background: linear-gradient(
+    90deg,
+    hsl(var(--foreground)) 25%,
+    hsl(var(--primary)) 50%,
+    hsl(var(--foreground)) 75%
+  );
+  background-size: 200% auto;
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: text-shimmer 3s linear infinite;
+}
+
+.hover-lift {
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.hover-lift:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.glass-effect {
+  backdrop-filter: blur(20px);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.perspective {
+  perspective: 1000px;
+}
+
+.transform-3d {
+  transform-style: preserve-3d;
+}
+
 .animate-glow-pulse {
   animation: glow-pulse 2s ease-in-out infinite;
 }
@@ -256,16 +364,33 @@
   animation: scale-in 0.6s ease-out;
 }
 
-/* Modern Card Styles */
+/* Modern Card Styles with Advanced Effects */
 .modern-card {
   background: rgba(var(--card), 0.8);
   backdrop-filter: blur(10px);
   @apply border border-border rounded-2xl p-6 transition-all duration-300;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+  transition: left 0.5s;
+}
+
+.modern-card:hover::before {
+  left: 100%;
 }
 
 .modern-card:hover {
   box-shadow: var(--shadow-glow);
-  @apply transform -translate-y-2;
+  @apply transform -translate-y-2 scale-105;
   border-color: hsl(var(--primary));
 }
 

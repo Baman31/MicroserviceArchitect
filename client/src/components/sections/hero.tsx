@@ -66,11 +66,22 @@ export default function Hero() {
         background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(255,255,255,0.1) 0%, transparent 50%), var(--gradient-primary)`,
       }}
     >
-      {/* Animated Background Elements */}
+      {/* Animated Background Elements with Particle System */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-float animate-morph"></div>
         <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
         <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/5 rounded-full blur-2xl animate-float" style={{ animationDelay: '-4s' }}></div>
+        
+        {/* Advanced Particle Effects */}
+        <div className="absolute top-10 left-10 w-4 h-4 bg-primary/30 rounded-full animate-particle-float" style={{ animationDelay: '-1s' }}></div>
+        <div className="absolute top-20 right-20 w-3 h-3 bg-secondary/40 rounded-full animate-particle-float" style={{ animationDelay: '-3s' }}></div>
+        <div className="absolute bottom-32 left-16 w-5 h-5 bg-primary/20 rounded-full animate-particle-float" style={{ animationDelay: '-5s' }}></div>
+        <div className="absolute bottom-20 right-32 w-2 h-2 bg-secondary/50 rounded-full animate-particle-float" style={{ animationDelay: '-7s' }}></div>
+        <div className="absolute top-40 left-1/3 w-6 h-6 bg-white/10 rounded-full animate-particle-float" style={{ animationDelay: '-2.5s' }}></div>
+        
+        {/* Pulsing Rings */}
+        <div className="absolute top-1/3 right-1/3 w-20 h-20 border-2 border-primary/20 rounded-full animate-pulse-ring" style={{ animationDelay: '0s' }}></div>
+        <div className="absolute bottom-1/3 left-1/3 w-16 h-16 border-2 border-secondary/20 rounded-full animate-pulse-ring" style={{ animationDelay: '-1s' }}></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -79,16 +90,16 @@ export default function Hero() {
             {/* Floating Badge */}
             <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8 animate-glow-pulse">
               <Sparkles className="h-5 w-5 text-secondary" />
-              <span className="text-sm font-medium">Leading IT Solutions Provider</span>
+              <span className="text-sm font-bold drop-shadow-sm">Leading IT Solutions Provider</span>
             </div>
 
-            <h1 className="text-5xl lg:text-7xl font-bold font-poppins mb-8 leading-tight" data-testid="hero-title">
-              Your Trusted
+            <h1 className="text-5xl lg:text-7xl font-black font-poppins mb-8 leading-tight drop-shadow-2xl" data-testid="hero-title">
+              <span className="animate-fade-in-up" style={{ animationDelay: '0.1s' }}>Your Trusted</span>
               <br />
-              <span className="text-gradient-accent">Digital Engineering</span>
+              <span className="text-gradient-accent animate-fade-in-up drop-shadow-lg" style={{ animationDelay: '0.3s' }}>Digital Engineering</span>
               <br />
-              Partner in{" "}
-              <span className="text-secondary animate-glow-pulse">Rajasthan</span>
+              <span className="animate-fade-in-up" style={{ animationDelay: '0.5s' }}>Partner in{" "}</span>
+              <span className="text-secondary animate-glow-pulse font-black drop-shadow-lg" style={{ animationDelay: '0.7s' }}>Rajasthan</span>
             </h1>
 
             <div className="text-xl lg:text-2xl mb-8 text-blue-100 min-h-[4rem] flex items-center" data-testid="hero-rotating-text">
@@ -104,7 +115,7 @@ export default function Hero() {
               </div>
             </div>
 
-            <p className="text-lg mb-12 text-blue-100 max-w-2xl leading-relaxed" data-testid="hero-description">
+            <p className="text-xl lg:text-2xl font-semibold mb-12 text-blue-100 max-w-2xl leading-relaxed drop-shadow-lg animate-fade-in-up" style={{ animationDelay: '0.9s' }} data-testid="hero-description">
               Empowering businesses across Jaipur and India with cutting-edge web development, cloud solutions, and digital transformation services that drive growth and innovation.
             </p>
 
@@ -112,7 +123,7 @@ export default function Hero() {
               <Button 
                 asChild 
                 size="lg" 
-                className="modern-button group px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-glow-secondary transition-all duration-500"
+                className="modern-button group px-8 py-4 text-lg font-bold shadow-2xl hover:shadow-glow-secondary hover-lift transition-all duration-500"
                 onClick={handleStartProject}
                 data-testid="button-start-project"
               >
@@ -125,7 +136,7 @@ export default function Hero() {
                 asChild 
                 variant="outline" 
                 size="lg" 
-                className="glassmorphism border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-8 py-4 text-lg font-semibold hover:shadow-glow transition-all duration-500"
+                className="glass-effect border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-8 py-4 text-lg font-bold hover:shadow-glow hover-lift transition-all duration-500"
                 onClick={handleViewWork}
                 data-testid="button-view-work"
               >
@@ -136,16 +147,16 @@ export default function Hero() {
             {/* Stats Row */}
             <div className="grid grid-cols-3 gap-8 mt-16 pt-8 border-t border-white/20">
               <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
-                <div className="text-3xl font-bold text-secondary">100+</div>
-                <div className="text-sm text-blue-200">Projects Delivered</div>
+                <div className="text-4xl font-black text-secondary drop-shadow-lg">100+</div>
+                <div className="text-base font-semibold text-blue-200 drop-shadow-sm">Projects Delivered</div>
               </div>
               <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
-                <div className="text-3xl font-bold text-secondary">50+</div>
-                <div className="text-sm text-blue-200">Happy Clients</div>
+                <div className="text-4xl font-black text-secondary drop-shadow-lg">50+</div>
+                <div className="text-base font-semibold text-blue-200 drop-shadow-sm">Happy Clients</div>
               </div>
               <div className="text-center animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
-                <div className="text-3xl font-bold text-secondary">24/7</div>
-                <div className="text-sm text-blue-200">Support</div>
+                <div className="text-4xl font-black text-secondary drop-shadow-lg">24/7</div>
+                <div className="text-base font-semibold text-blue-200 drop-shadow-sm">Support</div>
               </div>
             </div>
           </div>
