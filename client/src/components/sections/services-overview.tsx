@@ -1,5 +1,5 @@
 import ServiceCard from "@/components/ui/service-card";
-import { Code, Monitor, Search, Cloud, Infinity, Gauge } from "lucide-react";
+import { Code, Monitor, Search, Cloud, Infinity, Gauge, Sparkles } from "lucide-react";
 
 const services = [
   {
@@ -48,25 +48,47 @@ const services = [
 
 export default function ServicesOverview() {
   return (
-    <section className="py-20 bg-muted" data-testid="services-overview-section">
+    <section className="py-24 lg:py-32 relative overflow-hidden" data-testid="services-overview-section">
+      {/* Background Elements */}
+      <div className="absolute inset-0 -z-10">
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/5 rounded-full blur-3xl"></div>
+      </div>
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="services-title">Our Services</h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto" data-testid="services-description">
-            From web development to cloud solutions, we offer comprehensive IT services tailored to drive your business growth and digital transformation.
+        <div className="text-center mb-20 animate-fade-in-up">
+          {/* Section Badge */}
+          <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
+            <Sparkles className="h-5 w-5 text-primary" />
+            <span className="text-sm font-medium">Our Expertise</span>
+          </div>
+
+          <h2 className="text-4xl lg:text-6xl font-bold font-poppins mb-8 leading-tight" data-testid="services-title">
+            <span className="text-gradient">Comprehensive</span>
+            <br />
+            <span className="text-foreground">IT Solutions</span>
+          </h2>
+          <p className="text-xl lg:text-2xl text-muted-foreground max-w-4xl mx-auto leading-relaxed" data-testid="services-description">
+            From cutting-edge web development to scalable cloud solutions, we deliver comprehensive IT services designed to accelerate your business growth and digital transformation journey.
           </p>
         </div>
         
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
           {services.map((service, index) => (
-            <ServiceCard 
+            <div 
               key={index}
-              icon={service.icon}
-              title={service.title}
-              description={service.description}
-              href={service.href}
-              testId={service.testId}
-            />
+              className="animate-fade-in-up"
+              style={{ animationDelay: `${index * 0.1}s` }}
+            >
+              <ServiceCard 
+                icon={service.icon}
+                title={service.title}
+                description={service.description}
+                href={service.href}
+                testId={service.testId}
+                index={index}
+              />
+            </div>
           ))}
         </div>
       </div>

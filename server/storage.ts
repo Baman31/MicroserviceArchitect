@@ -199,7 +199,8 @@ export class MemStorage implements IStorage {
       id, 
       createdAt: new Date(),
       caseStudyUrl: insertProject.caseStudyUrl || null,
-      featured: insertProject.featured || null
+      featured: insertProject.featured || null,
+      technologies: Array.isArray(insertProject.technologies) ? insertProject.technologies as string[] : []
     };
     this.projects.set(id, project);
     return project;
@@ -209,7 +210,11 @@ export class MemStorage implements IStorage {
     const project = this.projects.get(id);
     if (!project) return undefined;
 
-    const updatedProject: Project = { ...project, ...updateData };
+    const updatedProject: Project = { 
+      ...project, 
+      ...updateData,
+      technologies: Array.isArray(updateData.technologies) ? updateData.technologies as string[] : project.technologies
+    };
     this.projects.set(id, updatedProject);
     return updatedProject;
   }
@@ -297,7 +302,7 @@ export class MemStorage implements IStorage {
       createdAt: now,
       updatedAt: now,
       imageUrl: insertBlogPost.imageUrl || null,
-      tags: insertBlogPost.tags || null,
+      tags: Array.isArray(insertBlogPost.tags) ? insertBlogPost.tags as string[] : null,
       published: insertBlogPost.published || null
     };
     this.blogPosts.set(id, blogPost);
@@ -311,7 +316,8 @@ export class MemStorage implements IStorage {
     const updatedBlogPost: BlogPost = { 
       ...blogPost, 
       ...updateData, 
-      updatedAt: new Date() 
+      updatedAt: new Date(),
+      tags: Array.isArray(updateData.tags) ? updateData.tags as string[] : blogPost.tags
     };
     this.blogPosts.set(id, updatedBlogPost);
     return updatedBlogPost;

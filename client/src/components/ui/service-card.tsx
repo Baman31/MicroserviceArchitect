@@ -1,5 +1,5 @@
 import { Link } from "wouter";
-import { LucideIcon, ArrowRight } from "lucide-react";
+import { LucideIcon, ArrowRight, ExternalLink } from "lucide-react";
 
 interface ServiceCardProps {
   icon: LucideIcon;
@@ -7,19 +7,71 @@ interface ServiceCardProps {
   description: string;
   href: string;
   testId?: string;
+  index?: number;
 }
 
-export default function ServiceCard({ icon: Icon, title, description, href, testId }: ServiceCardProps) {
+export default function ServiceCard({ icon: Icon, title, description, href, testId, index = 0 }: ServiceCardProps) {
+  const gradientColors = [
+    'from-purple-500/20 to-pink-500/20',
+    'from-blue-500/20 to-cyan-500/20',
+    'from-green-500/20 to-teal-500/20',
+    'from-orange-500/20 to-red-500/20',
+    'from-indigo-500/20 to-purple-500/20',
+    'from-pink-500/20 to-rose-500/20'
+  ];
+
+  const iconColors = [
+    'text-purple-400',
+    'text-blue-400',
+    'text-green-400',
+    'text-orange-400',
+    'text-indigo-400',
+    'text-pink-400'
+  ];
+
   return (
-    <div className="service-card bg-card p-8 rounded-lg shadow-md hover:shadow-xl border border-border" data-testid={testId}>
-      <div className="bg-primary/10 w-16 h-16 rounded-lg flex items-center justify-center mb-6">
-        <Icon className="text-primary h-8 w-8" />
+    <Link href={href} data-testid={`${testId}-link`}>
+      <div className="service-card group h-full" data-testid={testId}>
+        {/* Gradient Background */}
+        <div className={`absolute inset-0 bg-gradient-to-br ${gradientColors[index % gradientColors.length]} opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`}></div>
+        
+        {/* Content */}
+        <div className="relative z-10 h-full">
+          {/* Icon */}
+          <div className="mb-8">
+            <div className="relative">
+              <div className="glassmorphism w-20 h-20 rounded-2xl flex items-center justify-center group-hover:shadow-glow transition-all duration-500">
+                <Icon className={`h-10 w-10 ${iconColors[index % iconColors.length]} group-hover:scale-110 transition-all duration-300`} />
+              </div>
+              <div className="absolute -top-2 -right-2 w-6 h-6 bg-primary rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 animate-ping"></div>
+            </div>
+          </div>
+
+          {/* Text Content */}
+          <div className="mb-8">
+            <h3 className="text-2xl font-bold font-poppins mb-4 group-hover:text-primary transition-colors duration-300" data-testid={`${testId}-title`}>
+              {title}
+            </h3>
+            <p className="text-muted-foreground leading-relaxed" data-testid={`${testId}-description`}>
+              {description}
+            </p>
+          </div>
+
+          {/* CTA */}
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-primary font-semibold group-hover:text-secondary transition-colors duration-300">
+              Learn More
+            </span>
+            <div className="flex items-center space-x-2">
+              <ArrowRight className="h-5 w-5 text-primary group-hover:text-secondary group-hover:translate-x-1 transition-all duration-300" />
+              <ExternalLink className="h-4 w-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300" />
+            </div>
+          </div>
+
+          {/* Hover Effect Lines */}
+          <div className="absolute bottom-0 left-0 w-0 h-1 bg-gradient-primary group-hover:w-full transition-all duration-500 rounded-full"></div>
+        </div>
       </div>
-      <h3 className="text-xl font-semibold font-poppins mb-4" data-testid={`${testId}-title`}>{title}</h3>
-      <p className="text-muted-foreground mb-6" data-testid={`${testId}-description`}>{description}</p>
-      <Link href={href} className="text-primary hover:text-secondary font-medium inline-flex items-center" data-testid={`${testId}-link`}>
-        Learn More <ArrowRight className="ml-2 h-4 w-4" />
-      </Link>
-    </div>
+    </Link>
   );
 }

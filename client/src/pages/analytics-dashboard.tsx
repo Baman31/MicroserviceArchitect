@@ -72,11 +72,13 @@ export default function AnalyticsDashboard() {
     }
   };
 
-  const serviceData = serviceInterest?.map((item: any, index: number) => ({
-    name: item.service.replace('-', ' ').replace(/\b\w/g, (l: string) => l.toUpperCase()),
-    value: item.count,
-    color: COLORS[index % COLORS.length]
-  })) || [];
+  const serviceData = Array.isArray(serviceInterest) 
+    ? serviceInterest.map((item: any, index: number) => ({
+        name: item.service?.replace('-', ' ')?.replace(/\b\w/g, (l: string) => l.toUpperCase()) || `Service ${index + 1}`,
+        value: item.count || 0,
+        color: COLORS[index % COLORS.length]
+      })) 
+    : [];
 
   return (
     <>
@@ -95,9 +97,9 @@ export default function AnalyticsDashboard() {
             
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <Badge variant={healthStatus?.overall === 'healthy' ? 'default' : 'destructive'}>
-                  <div className={`w-2 h-2 rounded-full mr-2 ${getStatusColor(healthStatus?.overall)}`}></div>
-                  System {healthStatus?.overall || 'Unknown'}
+                <Badge variant={(healthStatus as any)?.overall === 'healthy' ? 'default' : 'destructive'}>
+                  <div className={`w-2 h-2 rounded-full mr-2 ${getStatusColor((healthStatus as any)?.overall || 'unknown')}`}></div>
+                  System {(healthStatus as any)?.overall || 'Unknown'}
                 </Badge>
               </div>
               
@@ -113,7 +115,7 @@ export default function AnalyticsDashboard() {
 
           {/* Service Health Status */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-            {healthStatus?.services?.map((service: any) => (
+            {Array.isArray((healthStatus as any)?.services) && (healthStatus as any).services.map((service: any) => (
               <Card key={service.service}>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                   <CardTitle className="text-sm font-medium capitalize">
@@ -142,7 +144,7 @@ export default function AnalyticsDashboard() {
                 <TrendingUp className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{analyticsData?.totalEvents || 0}</div>
+                <div className="text-2xl font-bold">{(analyticsData as any)?.totalEvents || 0}</div>
                 <p className="text-xs text-muted-foreground">Analytics events tracked</p>
               </CardContent>
             </Card>
@@ -153,7 +155,7 @@ export default function AnalyticsDashboard() {
                 <Eye className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{analyticsData?.pageViews || 0}</div>
+                <div className="text-2xl font-bold">{(analyticsData as any)?.pageViews || 0}</div>
                 <p className="text-xs text-muted-foreground">Pages visited</p>
               </CardContent>
             </Card>
@@ -164,7 +166,7 @@ export default function AnalyticsDashboard() {
                 <Users className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{dashboardData?.leads?.totalContacts || 0}</div>
+                <div className="text-2xl font-bold">{(dashboardData as any)?.leads?.totalContacts || 0}</div>
                 <p className="text-xs text-muted-foreground">Total inquiries</p>
               </CardContent>
             </Card>
@@ -175,7 +177,7 @@ export default function AnalyticsDashboard() {
                 <MessageSquare className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{dashboardData?.leads?.conversionRate || '0'}%</div>
+                <div className="text-2xl font-bold">{(dashboardData as any)?.leads?.conversionRate || '0'}%</div>
                 <p className="text-xs text-muted-foreground">Contact to quote</p>
               </CardContent>
             </Card>
@@ -223,24 +225,24 @@ export default function AnalyticsDashboard() {
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Projects</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold">{dashboardData?.content?.projects?.total || 0}</span>
-                      <Badge variant="secondary">{dashboardData?.content?.projects?.featured || 0} featured</Badge>
+                      <span className="text-2xl font-bold">{(dashboardData as any)?.content?.projects?.total || 0}</span>
+                      <Badge variant="secondary">{(dashboardData as any)?.content?.projects?.featured || 0} featured</Badge>
                     </div>
                   </div>
                   
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Blog Posts</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold">{dashboardData?.content?.blogPosts?.total || 0}</span>
-                      <Badge variant="secondary">{dashboardData?.content?.blogPosts?.published || 0} published</Badge>
+                      <span className="text-2xl font-bold">{(dashboardData as any)?.content?.blogPosts?.total || 0}</span>
+                      <Badge variant="secondary">{(dashboardData as any)?.content?.blogPosts?.published || 0} published</Badge>
                     </div>
                   </div>
                   
                   <div className="flex justify-between items-center">
                     <span className="text-sm font-medium">Testimonials</span>
                     <div className="flex items-center space-x-2">
-                      <span className="text-2xl font-bold">{dashboardData?.content?.testimonials?.total || 0}</span>
-                      <Badge variant="secondary">{dashboardData?.content?.testimonials?.featured || 0} featured</Badge>
+                      <span className="text-2xl font-bold">{(dashboardData as any)?.content?.testimonials?.total || 0}</span>
+                      <Badge variant="secondary">{(dashboardData as any)?.content?.testimonials?.featured || 0} featured</Badge>
                     </div>
                   </div>
                 </div>
@@ -258,28 +260,28 @@ export default function AnalyticsDashboard() {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center">
                   <div className="text-3xl font-bold text-green-600">
-                    {microserviceMetrics?.performance?.activeServices || 0}/4
+                    {(microserviceMetrics as any)?.performance?.activeServices || 0}/4
                   </div>
                   <p className="text-sm text-muted-foreground">Active Services</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-3xl font-bold text-blue-600">
-                    {microserviceMetrics?.performance?.totalRequests || 0}
+                    {(microserviceMetrics as any)?.performance?.totalRequests || 0}
                   </div>
                   <p className="text-sm text-muted-foreground">Total Requests</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-3xl font-bold text-orange-600">
-                    {microserviceMetrics?.performance?.conversionRate || '0'}%
+                    {(microserviceMetrics as any)?.performance?.conversionRate || '0'}%
                   </div>
                   <p className="text-sm text-muted-foreground">Conversion Rate</p>
                 </div>
                 
                 <div className="text-center">
                   <div className="text-3xl font-bold text-purple-600">
-                    {microserviceMetrics?.performance?.contentItems || 0}
+                    {(microserviceMetrics as any)?.performance?.contentItems || 0}
                   </div>
                   <p className="text-sm text-muted-foreground">Content Items</p>
                 </div>
