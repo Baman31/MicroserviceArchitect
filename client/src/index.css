@@ -14,7 +14,7 @@
   --secondary: hsl(300, 100%, 70%);
   --secondary-foreground: hsl(240, 10%, 3.9%);
   --muted: hsl(240, 3.7%, 15.9%);
-  --muted-foreground: hsl(240, 5%, 64.9%);
+  --muted-foreground: hsl(240, 5%, 84.9%);
   --accent: hsl(240, 3.7%, 15.9%);
   --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(0, 62.8%, 30.6%);
@@ -108,6 +108,30 @@
 
   html {
     scroll-behavior: smooth;
+  }
+
+  /* Enhanced dark mode text contrast */
+  .dark .text-muted-foreground,
+  :root .text-muted-foreground {
+    color: hsl(240, 5%, 84.9%);
+  }
+  
+  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
+  :root h1, :root h2, :root h3, :root h4, :root h5, :root h6 {
+    color: hsl(0, 0%, 98%);
+  }
+  
+  .dark p, :root p {
+    color: hsl(240, 5%, 84.9%);
+  }
+  
+  /* Ensure buttons and interactive elements have proper contrast */
+  .dark .bg-background, :root .bg-background {
+    background-color: hsl(240, 10%, 3.9%);
+  }
+  
+  .dark .text-foreground, :root .text-foreground {
+    color: hsl(0, 0%, 98%);
   }
 }
 
