@@ -113,7 +113,7 @@
   /* Enhanced text contrast for accessibility */
   .dark .text-muted-foreground,
   :root .text-muted-foreground {
-    color: hsl(220, 9%, 71%);
+    color: hsl(220, 9%, 75%);
   }
   
   .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
@@ -122,7 +122,20 @@
   }
   
   .dark p, :root p {
-    color: hsl(220, 9%, 71%);
+    color: hsl(220, 9%, 75%);
+  }
+  
+  /* Enhanced form element styling for better visibility */
+  .dark input, .dark textarea, .dark select,
+  :root input, :root textarea, :root select {
+    color: hsl(0, 0%, 98%) !important;
+    font-weight: 600;
+  }
+  
+  .dark input::placeholder, .dark textarea::placeholder,
+  :root input::placeholder, :root textarea::placeholder {
+    color: hsl(220, 9%, 65%) !important;
+    font-weight: 500;
   }
   
   /* Ensure buttons and interactive elements have proper contrast */

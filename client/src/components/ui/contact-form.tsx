@@ -123,7 +123,7 @@ export default function ContactForm() {
   };
 
   return (
-    <div className="bg-card p-8 rounded-lg shadow-md border border-border" data-testid="contact-form">
+    <div className="bg-card/50 backdrop-blur-xl p-8 rounded-3xl shadow-2xl border border-border/30" data-testid="contact-form">
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           <div className="grid md:grid-cols-2 gap-6">
@@ -132,7 +132,7 @@ export default function ContactForm() {
               name="name"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Name *</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Name *</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Your full name" 
@@ -150,7 +150,7 @@ export default function ContactForm() {
               name="email"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email *</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Email *</FormLabel>
                   <FormControl>
                     <Input 
                       type="email" 
@@ -171,7 +171,7 @@ export default function ContactForm() {
               name="phone"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Phone *</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Phone *</FormLabel>
                   <FormControl>
                     <Input 
                       type="tel" 
@@ -190,7 +190,7 @@ export default function ContactForm() {
               name="company"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Company Name</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Company Name</FormLabel>
                   <FormControl>
                     <Input 
                       placeholder="Your company" 
@@ -211,7 +211,7 @@ export default function ContactForm() {
               name="service"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Service Interested In</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Service Interested In</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
                     <FormControl>
                       <SelectTrigger data-testid="select-service">
@@ -236,7 +236,7 @@ export default function ContactForm() {
               name="budget"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Project Budget</FormLabel>
+                  <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Project Budget</FormLabel>
                   <Select onValueChange={field.onChange} defaultValue={field.value || ""}>
                     <FormControl>
                       <SelectTrigger data-testid="select-budget">
@@ -262,7 +262,7 @@ export default function ContactForm() {
             name="description"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Project Description</FormLabel>
+                <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Project Description</FormLabel>
                 <FormControl>
                   <Textarea 
                     rows={4} 
@@ -281,7 +281,7 @@ export default function ContactForm() {
             name="timeline"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Project Timeline</FormLabel>
+                <FormLabel className="text-base font-bold text-foreground drop-shadow-sm">Project Timeline</FormLabel>
                 <FormControl>
                   <RadioGroup 
                     onValueChange={field.onChange} 
@@ -292,7 +292,7 @@ export default function ContactForm() {
                     {timelines.map((timeline) => (
                       <div key={timeline.value} className="flex items-center space-x-2">
                         <RadioGroupItem value={timeline.value} id={timeline.value} />
-                        <Label htmlFor={timeline.value}>{timeline.label}</Label>
+                        <Label htmlFor={timeline.value} className="text-base font-bold text-foreground drop-shadow-sm">{timeline.label}</Label>
                       </div>
                     ))}
                   </RadioGroup>
@@ -304,7 +304,7 @@ export default function ContactForm() {
           
           <Button 
             type="submit" 
-            className="w-full" 
+            className="w-full modern-button font-bold text-lg py-4 shadow-2xl hover:shadow-glow-secondary hover-lift" 
             disabled={isSubmitting}
             data-testid="button-submit-contact"
           >
