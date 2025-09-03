@@ -27,21 +27,40 @@ export default function Header() {
 
   const isActive = (path: string) => location === path;
 
+  // Initialize theme from localStorage and handle scroll
   useEffect(() => {
     const handleScroll = () => {
       setIsScrolled(window.scrollY > 50);
     };
+
+    // Initialize theme from localStorage or system preference
+    const savedTheme = localStorage.getItem('theme');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'light' || (savedTheme === null && !prefersDark)) {
+      setIsDarkMode(false);
+      document.documentElement.classList.add('light');
+    } else {
+      setIsDarkMode(true);
+      document.documentElement.classList.remove('light');
+    }
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const toggleDarkMode = () => {
-    setIsDarkMode(!isDarkMode);
-    if (isDarkMode) {
-      document.documentElement.classList.add('light');
-    } else {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    
+    if (newMode) {
+      // Switching to dark mode
       document.documentElement.classList.remove('light');
+      localStorage.setItem('theme', 'dark');
+    } else {
+      // Switching to light mode
+      document.documentElement.classList.add('light');
+      localStorage.setItem('theme', 'light');
     }
   };
 
@@ -198,100 +217,132 @@ export default function Header() {
                   <Menu className="h-6 w-6" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[320px] glassmorphism">
-                <div className="flex flex-col space-y-6 mt-8">
-                  <div className="text-center">
-                    <h3 className="text-xl font-bold text-gradient mb-2">Navigation</h3>
-                    <div className="w-12 h-0.5 gradient-primary mx-auto rounded-full"></div>
+              <SheetContent side="right" className="w-[380px] glassmorphism border-l border-border/20 p-0">
+                <div className="flex flex-col h-full">
+                  {/* Header */}
+                  <div className="p-6 border-b border-border/20">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center">
+                        <div className="p-2 rounded-xl gradient-primary mr-3">
+                          <Zap className="h-5 w-5 text-white" />
+                        </div>
+                        <div>
+                          <span className="text-lg font-bold text-gradient">TechVantage</span>
+                          <span className="text-xs text-muted-foreground block -mt-0.5">Solutions</span>
+                        </div>
+                      </div>
+                    </div>
+                    <p className="text-sm text-muted-foreground">Navigate through our services and solutions</p>
                   </div>
                   
-                  <Link 
-                    href="/" 
-                    onClick={() => setIsOpen(false)}
-                    className={`p-4 rounded-xl text-lg font-medium transition-all duration-300 ${
-                      isActive("/") 
-                        ? "text-primary bg-primary/10 shadow-glow" 
-                        : "hover:text-primary hover:bg-primary/5"
-                    }`}
-                    data-testid="mobile-nav-home"
-                  >
-                    Home
-                  </Link>
-                  
-                  <div className="space-y-3">
-                    <p className="text-lg font-semibold text-muted-foreground px-4">Services</p>
-                    {services.map((service) => (
+                  {/* Navigation Content */}
+                  <div className="flex-1 overflow-y-auto p-6 space-y-6">
+                    <Link 
+                      href="/" 
+                      onClick={() => setIsOpen(false)}
+                      className={`modern-card p-4 rounded-2xl text-lg font-semibold transition-all duration-500 hover:shadow-glow group ${
+                        isActive("/") 
+                          ? "text-primary bg-primary/10 shadow-glow" 
+                          : "hover:text-primary hover:bg-primary/5"
+                      }`}
+                      data-testid="mobile-nav-home"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span>Home</span>
+                        <div className="w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                      </div>
+                    </Link>
+                    
+                    <div className="space-y-4">
+                      <div className="glassmorphism p-4 rounded-2xl">
+                        <p className="text-lg font-bold text-gradient mb-4">Our Services</p>
+                        <div className="grid grid-cols-1 gap-3">
+                          {services.map((service, index) => (
+                            <Link 
+                              key={service.href}
+                              href={service.href} 
+                              onClick={() => setIsOpen(false)}
+                              className="block p-3 hover:bg-primary/10 rounded-xl transition-all duration-300 hover:shadow-glow group"
+                              data-testid={`mobile-nav-service-${service.href.split('/').pop()}`}
+                              style={{ animationDelay: `${index * 0.1}s` }}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span className="text-sm font-medium group-hover:text-primary transition-colors">{service.name}</span>
+                                <div className="w-1.5 h-1.5 rounded-full bg-secondary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                              </div>
+                            </Link>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 gap-4">
                       <Link 
-                        key={service.href}
-                        href={service.href} 
+                        href="/portfolio" 
                         onClick={() => setIsOpen(false)}
-                        className="block pl-8 pr-4 py-2 text-sm hover:text-primary hover:bg-primary/5 rounded-xl transition-all duration-300"
-                        data-testid={`mobile-nav-service-${service.href.split('/').pop()}`}
+                        className={`modern-card p-4 rounded-2xl text-lg font-semibold transition-all duration-500 hover:shadow-glow group ${
+                          isActive("/portfolio") 
+                            ? "text-primary bg-primary/10 shadow-glow" 
+                            : "hover:text-primary hover:bg-primary/5"
+                        }`}
+                        data-testid="mobile-nav-portfolio"
                       >
-                        {service.name}
+                        <div className="flex items-center justify-between">
+                          <span>Portfolio</span>
+                          <div className="w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
                       </Link>
-                    ))}
+                      
+                      <Link 
+                        href="/about" 
+                        onClick={() => setIsOpen(false)}
+                        className={`modern-card p-4 rounded-2xl text-lg font-semibold transition-all duration-500 hover:shadow-glow group ${
+                          isActive("/about") 
+                            ? "text-primary bg-primary/10 shadow-glow" 
+                            : "hover:text-primary hover:bg-primary/5"
+                        }`}
+                        data-testid="mobile-nav-about"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>About</span>
+                          <div className="w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                      </Link>
+                      
+                      <Link 
+                        href="/contact" 
+                        onClick={() => setIsOpen(false)}
+                        className={`modern-card p-4 rounded-2xl text-lg font-semibold transition-all duration-500 hover:shadow-glow group ${
+                          isActive("/contact") 
+                            ? "text-primary bg-primary/10 shadow-glow" 
+                            : "hover:text-primary hover:bg-primary/5"
+                        }`}
+                        data-testid="mobile-nav-contact"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>Contact</span>
+                          <div className="w-2 h-2 rounded-full bg-primary opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                        </div>
+                      </Link>
+                    </div>
                   </div>
                   
-                  <Link 
-                    href="/portfolio" 
-                    onClick={() => setIsOpen(false)}
-                    className={`p-4 rounded-xl text-lg font-medium transition-all duration-300 ${
-                      isActive("/portfolio") 
-                        ? "text-primary bg-primary/10 shadow-glow" 
-                        : "hover:text-primary hover:bg-primary/5"
-                    }`}
-                    data-testid="mobile-nav-portfolio"
-                  >
-                    Portfolio
-                  </Link>
-                  
-                  <Link 
-                    href="/about" 
-                    onClick={() => setIsOpen(false)}
-                    className={`p-4 rounded-xl text-lg font-medium transition-all duration-300 ${
-                      isActive("/about") 
-                        ? "text-primary bg-primary/10 shadow-glow" 
-                        : "hover:text-primary hover:bg-primary/5"
-                    }`}
-                    data-testid="mobile-nav-about"
-                  >
-                    About
-                  </Link>
-                  
-                  <Link 
-                    href="/blog" 
-                    onClick={() => setIsOpen(false)}
-                    className={`p-4 rounded-xl text-lg font-medium transition-all duration-300 ${
-                      isActive("/blog") 
-                        ? "text-primary bg-primary/10 shadow-glow" 
-                        : "hover:text-primary hover:bg-primary/5"
-                    }`}
-                    data-testid="mobile-nav-blog"
-                  >
-                    Blog
-                  </Link>
-                  
-                  <Link 
-                    href="/contact" 
-                    onClick={() => setIsOpen(false)}
-                    className={`p-4 rounded-xl text-lg font-medium transition-all duration-300 ${
-                      isActive("/contact") 
-                        ? "text-primary bg-primary/10 shadow-glow" 
-                        : "hover:text-primary hover:bg-primary/5"
-                    }`}
-                    data-testid="mobile-nav-contact"
-                  >
-                    Contact
-                  </Link>
-                  
-                  <Button 
-                    asChild 
-                    className="modern-button mt-6 mx-4 px-6 py-3 rounded-xl font-medium shadow-lg hover:shadow-glow-secondary transition-all duration-300" 
-                    data-testid="mobile-button-get-quote"
-                  >
-                    <Link href="/contact" onClick={() => setIsOpen(false)}>Get Quote</Link>
-                  </Button>
+                  {/* Footer */}
+                  <div className="p-6 border-t border-border/20 space-y-4">
+                    <Button 
+                      asChild 
+                      className="w-full modern-button font-semibold shadow-lg hover:shadow-glow-secondary transition-all duration-300"
+                      data-testid="mobile-nav-get-quote"
+                    >
+                      <Link href="/contact" onClick={() => setIsOpen(false)}>Get Free Quote</Link>
+                    </Button>
+                    
+                    <div className="text-center">
+                      <p className="text-xs text-muted-foreground">
+                        Made with ❤️ in Jaipur
+                      </p>
+                    </div>
+                  </div>
                 </div>
               </SheetContent>
             </Sheet>
