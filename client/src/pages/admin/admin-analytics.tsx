@@ -56,7 +56,19 @@ export default function AdminAnalytics() {
     return () => window.removeEventListener('mousemove', throttledHandler);
   }, []);
 
-  const { data: adminAnalytics = {}, isLoading: analyticsLoading } = useQuery({
+  const { data: adminAnalytics = {
+    userStatusBreakdown: {
+      active: 0,
+      blocked: 0,
+      pending: 0,
+      suspended: 0
+    },
+    totalProjects: 0,
+    featuredProjects: 0,
+    totalTestimonials: 0,
+    featuredTestimonials: 0,
+    totalContacts: 0
+  }, isLoading: analyticsLoading } = useQuery({
     queryKey: ['/api/admin/analytics/overview', timeframe],
     refetchInterval: 60000,
   });
