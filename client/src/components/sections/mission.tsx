@@ -36,9 +36,9 @@ export default function Mission() {
         <div className="grid lg:grid-cols-2 gap-16 items-center">
           <div className="animate-slide-in-left">
             {/* Section Badge */}
-            <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
+            <div className="bg-primary/10 backdrop-blur-sm border border-primary/20 px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
               <Sparkles className="h-5 w-5 text-primary" />
-              <span className="text-sm font-medium">Our Mission</span>
+              <span className="text-sm font-medium text-foreground">Our Mission</span>
             </div>
 
             <h2 className="text-4xl lg:text-6xl font-bold font-poppins mb-8 leading-tight" data-testid="mission-title">
