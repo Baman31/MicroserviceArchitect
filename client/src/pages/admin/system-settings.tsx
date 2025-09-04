@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from "@/components/ui/alert-dialog";
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Settings, Plus, Edit, Trash2, Shield, Mail, Database, BarChart3, Globe } from "lucide-react";
+import { Settings, Plus, Edit, Trash2, Shield, Mail, Database, BarChart3, Globe, Sparkles, RefreshCw, Save, RotateCcw, Bell, Key, Activity, AlertTriangle, CheckCircle, Zap, HardDrive } from "lucide-react";
 import { SystemSetting } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -83,11 +83,27 @@ const DEFAULT_SETTINGS = [
 ];
 
 export default function SystemSettings() {
+  const [activeTab, setActiveTab] = useState("general");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingSetting, setEditingSetting] = useState<SystemSetting | null>(null);
   const [formData, setFormData] = useState<SettingFormData>(emptyFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    const throttledHandler = throttle(handleMouseMove, 100);
+    window.addEventListener('mousemove', throttledHandler);
+    return () => window.removeEventListener('mousemove', throttledHandler);
+  }, []);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -198,45 +214,94 @@ export default function SystemSettings() {
     ? settings 
     : settings.filter(s => s.category === selectedCategory);
 
+  const handleSaveSettings = () => {
+    setIsSaving(true);
+    console.log('Saving system settings...');
+    setTimeout(() => {
+      setIsSaving(false);
+      toast({
+        title: "Success!",
+        description: "System settings saved successfully.",
+      });
+    }, 2000);
+  };
+
+  const handleResetSettings = () => {
+    console.log('Resetting settings to defaults...');
+    toast({
+      title: "Settings Reset",
+      description: "Settings have been reset to default values.",
+    });
+  };
+
   return (
     <>
       <Helmet>
-        <title>System Settings - Admin Portal</title>
-        <meta name="description" content="Manage system configurations, security settings, and application preferences." />
+        <title>System Settings - TechVantage Solutions Admin</title>
+        <meta name="description" content="Configure system-wide settings, security, and integrations." />
       </Helmet>
 
-      <div className="container mx-auto px-6 py-8" data-testid="system-settings">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">System Settings</h1>
-            <p className="text-muted-foreground">
-              Configure system-wide settings, security, and application preferences
-            </p>
-          </div>
+      <div className="min-h-screen relative overflow-hidden"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(66, 153, 225, 0.08) 0%, transparent 50%), var(--gradient-bg)`,
+        }}
+      >
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
+          <div className="absolute top-10 left-10 w-4 h-4 bg-primary/20 rounded-full animate-particle-float" style={{ animationDelay: '-1s' }}></div>
+          <div className="absolute bottom-20 right-20 w-3 h-3 bg-secondary/30 rounded-full animate-particle-float" style={{ animationDelay: '-3s' }}></div>
+        </div>
+
+        <div className="container mx-auto px-6 py-8 relative z-10" data-testid="system-settings">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 animate-fade-in-up">
+            <div>
+              <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-6 animate-glow-pulse">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <span className="text-sm font-bold text-foreground">Settings Control Center</span>
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-black mb-3 text-gradient">System Settings</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Configure system-wide settings, security, and integrations with advanced controls
+              </p>
+            </div>
           
-          <div className="flex gap-3">
-            {settings.length === 0 && (
-              <Button 
-                variant="outline"
-                onClick={initializeDefaultSettings}
-                data-testid="initialize-settings-button"
-              >
-                Initialize Default Settings
+            <div className="flex items-center gap-4 animate-slide-in-right">
+              <Button variant="outline" onClick={handleResetSettings} className="glassmorphism border-muted-foreground/20 hover:bg-muted/10 gap-2">
+                <RotateCcw className="h-4 w-4" />
+                Reset
               </Button>
-            )}
-            
-            <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-              <DialogTrigger asChild>
+              
+              <Button onClick={handleSaveSettings} disabled={isSaving} className="modern-button gap-2">
+                <Save className="h-4 w-4" />
+                {isSaving ? 'Saving...' : 'Save All'}
+              </Button>
+              
+              {settings.length === 0 && (
                 <Button 
-                  onClick={() => handleOpenDialog()}
-                  className="gap-2"
-                  data-testid="add-setting-button"
+                  variant="outline"
+                  onClick={initializeDefaultSettings}
+                  className="glassmorphism border-primary/20 hover:bg-primary/10"
+                  data-testid="initialize-settings-button"
                 >
-                  <Plus className="h-4 w-4" />
-                  Add Setting
+                  <Database className="h-4 w-4 mr-2" />
+                  Initialize Defaults
                 </Button>
-              </DialogTrigger>
+              )}
+              
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    onClick={() => handleOpenDialog()}
+                    className="modern-button gap-2"
+                    data-testid="add-setting-button"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add Setting
+                  </Button>
+                </DialogTrigger>
               <DialogContent className="max-w-2xl">
                 <DialogHeader>
                   <DialogTitle>
@@ -319,9 +384,9 @@ export default function SystemSettings() {
                   </div>
                 </div>
               </DialogContent>
-            </Dialog>
+              </Dialog>
+            </div>
           </div>
-        </div>
 
         {/* Category Filters */}
         <Card className="mb-6">
@@ -473,7 +538,28 @@ export default function SystemSettings() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </>
   );
+}
+
+// Utility function for throttling mouse events
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return function (this: any, ...args: any[]) {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
 }

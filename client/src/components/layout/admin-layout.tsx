@@ -23,23 +23,25 @@ const ADMIN_NAVIGATION = [
     title: "User Management",
     items: [
       { title: "All Users", href: "/admin/users", icon: Users },
-      { title: "Admin Accounts", href: "/admin/admins", icon: Shield },
-      { title: "Activity Logs", href: "/admin/activity", icon: Activity },
+      { title: "Activity Logs", href: "/admin/activity-logs", icon: Activity },
     ]
   },
   {
     title: "Content Management",
     items: [
-      { title: "Projects", href: "/admin/projects", icon: Briefcase },
-      { title: "Testimonials", href: "/admin/testimonials", icon: MessageSquare },
-      { title: "Blog Posts", href: "/admin/blog", icon: FileText },
+      { title: "Content", href: "/admin/content", icon: Briefcase },
+    ]
+  },
+  {
+    title: "Communication",
+    items: [
+      { title: "Messages", href: "/admin/communications", icon: MessageSquare },
     ]
   },
   {
     title: "System",
     items: [
       { title: "Settings", href: "/admin/settings", icon: Settings },
-      { title: "Communications", href: "/admin/communications", icon: MessageSquare },
     ]
   }
 ];

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,7 +11,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { Switch } from "@/components/ui/switch";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Users, Plus, Edit, Trash2, Shield, ShieldOff, CheckCircle, XCircle, Clock, Search, Filter, MoreVertical, Mail, Phone, Calendar } from "lucide-react";
+import { Users, Plus, Edit, Trash2, Shield, ShieldOff, CheckCircle, XCircle, Clock, Search, Filter, MoreVertical, Mail, Phone, Calendar, Sparkles, RefreshCw } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { User } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
@@ -42,6 +42,20 @@ export default function UserManagement() {
   const [editingUser, setEditingUser] = useState<User | null>(null);
   const [formData, setFormData] = useState<UserFormData>(emptyFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    const throttledHandler = throttle(handleMouseMove, 100);
+    window.addEventListener('mousemove', throttledHandler);
+    return () => window.removeEventListener('mousemove', throttledHandler);
+  }, []);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
@@ -243,140 +257,167 @@ export default function UserManagement() {
     suspended: users.filter(u => u.status === 'suspended').length,
   };
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['/api/admin/users'] });
+  };
+
   return (
     <>
       <Helmet>
-        <title>User Management - Admin Portal</title>
+        <title>User Management - TechVantage Solutions Admin</title>
         <meta name="description" content="Comprehensive user management system for admins to manage all user accounts." />
       </Helmet>
 
-      <div className="container mx-auto px-6 py-8" data-testid="user-management">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">User Management</h1>
-            <p className="text-muted-foreground">
-              Manage user accounts, permissions, and access levels. {users.length} total users
-            </p>
-          </div>
-          
-          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-            <DialogTrigger asChild>
-              <Button 
-                onClick={() => handleOpenDialog()}
-                className="gap-2"
-                data-testid="add-user-button"
-              >
-                <Plus className="h-4 w-4" />
-                Add User
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-2xl">
-              <DialogHeader>
-                <DialogTitle>
-                  {editingUser ? "Edit User" : "Add New User"}
-                </DialogTitle>
-              </DialogHeader>
-              
-              <div className="space-y-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Username *</label>
-                    <Input
-                      placeholder="username"
-                      value={formData.username}
-                      onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
-                      data-testid="user-username-input"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Email</label>
-                    <Input
-                      placeholder="user@example.com"
-                      value={formData.email}
-                      onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                      data-testid="user-email-input"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">First Name</label>
-                    <Input
-                      placeholder="John"
-                      value={formData.firstName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
-                      data-testid="user-firstname-input"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Last Name</label>
-                    <Input
-                      placeholder="Doe"
-                      value={formData.lastName}
-                      onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
-                      data-testid="user-lastname-input"
-                    />
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="text-sm font-medium mb-2 block">Status</label>
-                    <Select
-                      value={formData.status}
-                      onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
-                    >
-                      <SelectTrigger data-testid="user-status-select">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="active">Active</SelectItem>
-                        <SelectItem value="blocked">Blocked</SelectItem>
-                        <SelectItem value="pending">Pending</SelectItem>
-                        <SelectItem value="suspended">Suspended</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="flex items-center space-x-2 pt-7">
-                    <Switch
-                      id="verified"
-                      checked={formData.verified}
-                      onCheckedChange={(checked) => setFormData(prev => ({ ...prev, verified: checked }))}
-                      data-testid="user-verified-switch"
-                    />
-                    <label htmlFor="verified" className="text-sm font-medium">
-                      Verified User
-                    </label>
-                  </div>
-                </div>
-
-                <div className="flex justify-end gap-3 pt-4">
-                  <Button variant="outline" onClick={handleCloseDialog} data-testid="cancel-user-button">
-                    Cancel
-                  </Button>
-                  <Button 
-                    onClick={handleSubmit} 
-                    disabled={isSubmitting}
-                    data-testid="save-user-button"
-                  >
-                    {isSubmitting ? "Saving..." : editingUser ? "Update" : "Create"}
-                  </Button>
-                </div>
-              </div>
-            </DialogContent>
-          </Dialog>
+      <div className="min-h-screen relative overflow-hidden"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(66, 153, 225, 0.08) 0%, transparent 50%), var(--gradient-bg)`,
+        }}
+      >
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
+          <div className="absolute top-10 left-10 w-4 h-4 bg-primary/20 rounded-full animate-particle-float" style={{ animationDelay: '-1s' }}></div>
+          <div className="absolute bottom-20 right-20 w-3 h-3 bg-secondary/30 rounded-full animate-particle-float" style={{ animationDelay: '-3s' }}></div>
         </div>
 
-        {/* Filters and Search */}
-        <Card className="mb-6">
-          <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
-              <Filter className="h-5 w-5" />
-              Filters & Search
-            </CardTitle>
-          </CardHeader>
+        <div className="container mx-auto px-6 py-8 relative z-10" data-testid="user-management">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 animate-fade-in-up">
+            <div>
+              <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-6 animate-glow-pulse">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <span className="text-sm font-bold text-foreground">User Control Center</span>
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-black mb-3 text-gradient">User Management</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Manage user accounts, permissions, and access levels with real-time updates. {users.length} total users registered
+              </p>
+            </div>
+          
+            <div className="flex items-center gap-4 animate-slide-in-right">
+              <Button variant="outline" size="icon" onClick={handleRefresh} className="glassmorphism border-primary/20 hover:bg-primary/10">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+              
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogTrigger asChild>
+                  <Button 
+                    onClick={() => handleOpenDialog()}
+                    className="modern-button gap-2"
+                    data-testid="add-user-button"
+                  >
+                    <Plus className="h-4 w-4" />
+                    Add User
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle>
+                      {editingUser ? "Edit User" : "Add New User"}
+                    </DialogTitle>
+                  </DialogHeader>
+                  
+                  <div className="space-y-4 py-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Username *</label>
+                        <Input
+                          placeholder="username"
+                          value={formData.username}
+                          onChange={(e) => setFormData(prev => ({ ...prev, username: e.target.value }))}
+                          data-testid="user-username-input"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Email</label>
+                        <Input
+                          placeholder="user@example.com"
+                          value={formData.email}
+                          onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
+                          data-testid="user-email-input"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">First Name</label>
+                        <Input
+                          placeholder="John"
+                          value={formData.firstName}
+                          onChange={(e) => setFormData(prev => ({ ...prev, firstName: e.target.value }))}
+                          data-testid="user-firstname-input"
+                        />
+                      </div>
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Last Name</label>
+                        <Input
+                          placeholder="Doe"
+                          value={formData.lastName}
+                          onChange={(e) => setFormData(prev => ({ ...prev, lastName: e.target.value }))}
+                          data-testid="user-lastname-input"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-4">
+                      <div>
+                        <label className="text-sm font-medium mb-2 block">Status</label>
+                        <Select
+                          value={formData.status}
+                          onValueChange={(value) => setFormData(prev => ({ ...prev, status: value }))}
+                        >
+                          <SelectTrigger data-testid="user-status-select">
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="active">Active</SelectItem>
+                            <SelectItem value="blocked">Blocked</SelectItem>
+                            <SelectItem value="pending">Pending</SelectItem>
+                            <SelectItem value="suspended">Suspended</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="flex items-center space-x-2 pt-7">
+                        <Switch
+                          id="verified"
+                          checked={formData.verified}
+                          onCheckedChange={(checked) => setFormData(prev => ({ ...prev, verified: checked }))}
+                          data-testid="user-verified-switch"
+                        />
+                        <label htmlFor="verified" className="text-sm font-medium">
+                          Verified User
+                        </label>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-end gap-3 pt-4">
+                      <Button variant="outline" onClick={handleCloseDialog} data-testid="cancel-user-button">
+                        Cancel
+                      </Button>
+                      <Button 
+                        onClick={handleSubmit} 
+                        disabled={isSubmitting}
+                        data-testid="save-user-button"
+                      >
+                        {isSubmitting ? "Saving..." : editingUser ? "Update" : "Create"}
+                      </Button>
+                    </div>
+                  </div>
+                </DialogContent>
+            </Dialog>
+            </div>
+          </div>
+
+          {/* Filters and Search */}
+          <Card className="modern-card glassmorphism border border-primary/20 mb-6 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+            <CardHeader>
+              <CardTitle className="text-lg flex items-center gap-2 text-gradient">
+                <Filter className="h-5 w-5 text-primary" />
+                Filters & Search
+              </CardTitle>
+            </CardHeader>
           <CardContent>
             <div className="flex flex-col md:flex-row gap-4 mb-4">
               <div className="flex-1">
@@ -394,20 +435,20 @@ export default function UserManagement() {
             </div>
             
             <Tabs value={filterStatus} onValueChange={(value) => setFilterStatus(value as any)}>
-              <TabsList className="grid w-full grid-cols-5">
-                <TabsTrigger value="all" data-testid="filter-all">
+              <TabsList className="glassmorphism border border-primary/20 grid w-full grid-cols-5">
+                <TabsTrigger value="all" data-testid="filter-all" className="hover-lift font-semibold">
                   All ({statusCounts.all})
                 </TabsTrigger>
-                <TabsTrigger value="active" data-testid="filter-active">
+                <TabsTrigger value="active" data-testid="filter-active" className="hover-lift font-semibold">
                   Active ({statusCounts.active})
                 </TabsTrigger>
-                <TabsTrigger value="blocked" data-testid="filter-blocked">
+                <TabsTrigger value="blocked" data-testid="filter-blocked" className="hover-lift font-semibold">
                   Blocked ({statusCounts.blocked})
                 </TabsTrigger>
-                <TabsTrigger value="pending" data-testid="filter-pending">
+                <TabsTrigger value="pending" data-testid="filter-pending" className="hover-lift font-semibold">
                   Pending ({statusCounts.pending})
                 </TabsTrigger>
-                <TabsTrigger value="suspended" data-testid="filter-suspended">
+                <TabsTrigger value="suspended" data-testid="filter-suspended" className="hover-lift font-semibold">
                   Suspended ({statusCounts.suspended})
                 </TabsTrigger>
               </TabsList>
@@ -415,14 +456,14 @@ export default function UserManagement() {
           </CardContent>
         </Card>
 
-        {/* Users Table */}
-        <Card data-testid="users-table">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
-              Users ({filteredUsers.length})
-            </CardTitle>
-          </CardHeader>
+          {/* Users Table */}
+          <Card data-testid="users-table" className="modern-card glassmorphism border border-primary/20 animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-gradient">
+                <Users className="h-5 w-5 text-primary" />
+                Users ({filteredUsers.length})
+              </CardTitle>
+            </CardHeader>
           <CardContent>
             {isLoading ? (
               <div className="space-y-4" data-testid="users-loading">
@@ -612,7 +653,28 @@ export default function UserManagement() {
             )}
           </CardContent>
         </Card>
+        </div>
       </div>
     </>
   );
+}
+
+// Utility function for throttling mouse events
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return function (this: any, ...args: any[]) {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
 }

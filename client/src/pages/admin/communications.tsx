@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,8 +11,8 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Checkbox } from "@/components/ui/checkbox";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { Mail, MessageSquare, Bell, Plus, Send, Users, FileText, History, CheckCircle, Clock, XCircle } from "lucide-react";
-import { User, NotificationTemplate, Notification } from "@shared/schema";
+import { Mail, MessageSquare, Bell, Plus, Send, Users, FileText, History, CheckCircle, Clock, XCircle, Sparkles, RefreshCw, Filter, Search, User, Calendar, Archive, Trash2, Reply, MoreVertical, Phone } from "lucide-react";
+import { Contact, Quote, NotificationTemplate, Notification } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
@@ -51,19 +51,35 @@ const emptyTemplateFormData: TemplateFormData = {
 };
 
 export default function Communications() {
-  const [activeTab, setActiveTab] = useState("send");
+  const [activeTab, setActiveTab] = useState("contacts");
   const [isNotificationDialogOpen, setIsNotificationDialogOpen] = useState(false);
   const [isTemplateDialogOpen, setIsTemplateDialogOpen] = useState(false);
   const [notificationFormData, setNotificationFormData] = useState<NotificationFormData>(emptyNotificationFormData);
   const [templateFormData, setTemplateFormData] = useState<TemplateFormData>(emptyTemplateFormData);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterStatus, setFilterStatus] = useState("all");
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    const throttledHandler = throttle(handleMouseMove, 100);
+    window.addEventListener('mousemove', throttledHandler);
+    return () => window.removeEventListener('mousemove', throttledHandler);
+  }, []);
 
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   // Fetch data
-  const { data: users = [], isLoading: usersLoading } = useQuery<User[]>({
+  const { data: users = [], isLoading: usersLoading } = useQuery<any[]>({
     queryKey: ['/api/admin/users'],
   });
 
@@ -192,37 +208,67 @@ export default function Communications() {
     }
   };
 
+  const handleRefresh = () => {
+    queryClient.invalidateQueries({ queryKey: ['/api/contacts'] });
+    queryClient.invalidateQueries({ queryKey: ['/api/quotes'] });
+  };
+
   return (
     <>
       <Helmet>
-        <title>Communications - Admin Portal</title>
-        <meta name="description" content="Send notifications, manage templates, and communicate with users." />
+        <title>Communications - TechVantage Solutions Admin</title>
+        <meta name="description" content="Manage customer communications, contact inquiries, and quote requests." />
       </Helmet>
 
-      <div className="container mx-auto px-6 py-8" data-testid="communications">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold mb-2">Communications</h1>
-          <p className="text-muted-foreground">
-            Send notifications, manage templates, and communicate with users
-          </p>
+      <div className="min-h-screen relative overflow-hidden"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(66, 153, 225, 0.08) 0%, transparent 50%), var(--gradient-bg)`,
+        }}
+      >
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
+          <div className="absolute top-10 left-10 w-4 h-4 bg-primary/20 rounded-full animate-particle-float" style={{ animationDelay: '-1s' }}></div>
+          <div className="absolute bottom-20 right-20 w-3 h-3 bg-secondary/30 rounded-full animate-particle-float" style={{ animationDelay: '-3s' }}></div>
         </div>
 
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="grid w-full grid-cols-3 mb-8">
-            <TabsTrigger value="send" data-testid="tab-send">
-              <Send className="h-4 w-4 mr-2" />
-              Send Notifications
-            </TabsTrigger>
-            <TabsTrigger value="templates" data-testid="tab-templates">
-              <FileText className="h-4 w-4 mr-2" />
-              Templates
-            </TabsTrigger>
-            <TabsTrigger value="history" data-testid="tab-history">
-              <History className="h-4 w-4 mr-2" />
-              History
-            </TabsTrigger>
-          </TabsList>
+        <div className="container mx-auto px-6 py-8 relative z-10" data-testid="communications">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 animate-fade-in-up">
+            <div>
+              <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-6 animate-glow-pulse">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <span className="text-sm font-bold text-foreground">Communications Center</span>
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-black mb-3 text-gradient">Communications</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Manage customer communications, contact inquiries, and quote requests in real-time
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-4 animate-slide-in-right">
+              <Button variant="outline" size="icon" onClick={handleRefresh} className="glassmorphism border-primary/20 hover:bg-primary/10">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <Tabs value={activeTab} onValueChange={setActiveTab}>
+            <TabsList className="glassmorphism border border-primary/20 grid w-full grid-cols-3 mb-8">
+              <TabsTrigger value="contacts" data-testid="tab-contacts" className="hover-lift font-semibold">
+                <Mail className="h-4 w-4 mr-2" />
+                Contact Messages
+              </TabsTrigger>
+              <TabsTrigger value="quotes" data-testid="tab-quotes" className="hover-lift font-semibold">
+                <MessageSquare className="h-4 w-4 mr-2" />
+                Quote Requests
+              </TabsTrigger>
+              <TabsTrigger value="templates" data-testid="tab-templates" className="hover-lift font-semibold">
+                <FileText className="h-4 w-4 mr-2" />
+                Templates
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="send">
             <Card data-testid="send-notification-card">
@@ -622,7 +668,28 @@ export default function Communications() {
             </Card>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </>
   );
+}
+
+// Utility function for throttling mouse events
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return function (this: any, ...args: any[]) {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
 }

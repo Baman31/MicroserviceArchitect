@@ -1,18 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Helmet } from "react-helmet-async";
 import { useQuery } from "@tanstack/react-query";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, LineChart, Line, PieChart, Pie, Cell, AreaChart, Area } from "recharts";
-import { TrendingUp, TrendingDown, Users, Activity, Mail, Globe, Calendar, BarChart3 } from "lucide-react";
+import { TrendingUp, TrendingDown, Users, Activity, Mail, Globe, Calendar, BarChart3, RefreshCw, Download, Sparkles } from "lucide-react";
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8', '#82CA9D'];
+const COLORS = [
+  'hsl(217, 91%, 60%)', // Primary blue
+  'hsl(160, 84%, 39%)', // Secondary green  
+  'hsl(45, 93%, 58%)', // Chart yellow
+  'hsl(271, 81%, 56%)', // Chart purple
+  'hsl(0, 84%, 60%)', // Chart red
+  'hsl(180, 84%, 45%)' // Chart cyan
+];
 
 export default function AdminAnalytics() {
   const [timeframe, setTimeframe] = useState<'today' | 'week' | 'month' | 'year'>('month');
   const [analyticsType, setAnalyticsType] = useState<'overview' | 'users' | 'content' | 'performance'>('overview');
+  const [mousePosition, setMousePosition] = useState({ x: 50, y: 50 });
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePosition({
+        x: (e.clientX / window.innerWidth) * 100,
+        y: (e.clientY / window.innerHeight) * 100,
+      });
+    };
+
+    const throttledHandler = throttle(handleMouseMove, 100);
+    window.addEventListener('mousemove', throttledHandler);
+    return () => window.removeEventListener('mousemove', throttledHandler);
+  }, []);
 
   const { data: adminAnalytics = {}, isLoading: analyticsLoading } = useQuery({
     queryKey: ['/api/admin/analytics/overview', timeframe],
@@ -62,70 +84,107 @@ export default function AdminAnalytics() {
     { metric: 'Server Response Time', value: '180ms', trend: 'up', good: true },
   ];
 
+  const handleRefresh = () => {
+    // Refetch analytics data
+    console.log('Refreshing analytics data...');
+  };
+
+  const handleExport = () => {
+    console.log('Exporting analytics data...');
+  };
+
   return (
     <>
       <Helmet>
-        <title>Analytics - Admin Portal</title>
+        <title>Analytics Dashboard - TechVantage Solutions Admin</title>
         <meta name="description" content="Comprehensive analytics and performance monitoring for your website and users." />
       </Helmet>
 
-      <div className="container mx-auto px-6 py-8" data-testid="admin-analytics">
-        {/* Header */}
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Advanced Analytics</h1>
-            <p className="text-muted-foreground">
-              Comprehensive insights into user behavior, content performance, and system metrics
-            </p>
-          </div>
-          
-          <div className="flex gap-3">
-            <Select value={timeframe} onValueChange={(value) => setTimeframe(value as any)}>
-              <SelectTrigger className="w-40" data-testid="analytics-timeframe-select">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="today">Today</SelectItem>
-                <SelectItem value="week">This Week</SelectItem>
-                <SelectItem value="month">This Month</SelectItem>
-                <SelectItem value="year">This Year</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+      <div className="min-h-screen relative overflow-hidden"
+        style={{
+          background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(66, 153, 225, 0.08) 0%, transparent 50%), var(--gradient-bg)`,
+        }}
+      >
+        {/* Animated Background Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+          <div className="absolute top-3/4 right-1/4 w-96 h-96 bg-secondary/5 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
+          <div className="absolute top-10 left-10 w-4 h-4 bg-primary/20 rounded-full animate-particle-float" style={{ animationDelay: '-1s' }}></div>
+          <div className="absolute bottom-20 right-20 w-3 h-3 bg-secondary/30 rounded-full animate-particle-float" style={{ animationDelay: '-3s' }}></div>
         </div>
 
-        <Tabs value={analyticsType} onValueChange={(value) => setAnalyticsType(value as any)}>
-          <TabsList className="grid w-full grid-cols-4 mb-8">
-            <TabsTrigger value="overview" data-testid="analytics-overview">
-              <BarChart3 className="h-4 w-4 mr-2" />
-              Overview
-            </TabsTrigger>
-            <TabsTrigger value="users" data-testid="analytics-users">
-              <Users className="h-4 w-4 mr-2" />
-              Users
-            </TabsTrigger>
-            <TabsTrigger value="content" data-testid="analytics-content">
-              <Globe className="h-4 w-4 mr-2" />
-              Content
-            </TabsTrigger>
-            <TabsTrigger value="performance" data-testid="analytics-performance">
-              <Activity className="h-4 w-4 mr-2" />
-              Performance
-            </TabsTrigger>
-          </TabsList>
+        <div className="container mx-auto px-6 py-8 relative z-10" data-testid="admin-analytics">
+          {/* Header */}
+          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-8 animate-fade-in-up">
+            <div>
+              <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-6 animate-glow-pulse">
+                <Sparkles className="h-5 w-5 text-primary" />
+                <span className="text-sm font-bold text-foreground">Analytics Control Center</span>
+              </div>
+              <h1 className="text-4xl lg:text-5xl font-black mb-3 text-gradient">Advanced Analytics</h1>
+              <p className="text-lg text-muted-foreground max-w-2xl">
+                Comprehensive insights into user behavior, content performance, and system metrics with real-time updates
+              </p>
+            </div>
+            
+            <div className="flex items-center gap-4 animate-slide-in-right">
+              <Select value={timeframe} onValueChange={(value) => setTimeframe(value as any)}>
+                <SelectTrigger className="glassmorphism border border-primary/20 min-w-[140px]" data-testid="analytics-timeframe-select">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="today">Today</SelectItem>
+                  <SelectItem value="week">This Week</SelectItem>
+                  <SelectItem value="month">This Month</SelectItem>
+                  <SelectItem value="year">This Year</SelectItem>
+                </SelectContent>
+              </Select>
+              
+              <Button variant="outline" size="icon" onClick={handleRefresh} className="glassmorphism border-primary/20 hover:bg-primary/10">
+                <RefreshCw className="h-4 w-4" />
+              </Button>
+              
+              <Button variant="outline" size="icon" onClick={handleExport} className="glassmorphism border-secondary/20 hover:bg-secondary/10">
+                <Download className="h-4 w-4" />
+              </Button>
+            </div>
+          </div>
+
+          <Tabs value={analyticsType} onValueChange={(value) => setAnalyticsType(value as any)}>
+            <TabsList className="glassmorphism border border-primary/20 grid w-full grid-cols-4 mb-8">
+              <TabsTrigger value="overview" data-testid="analytics-overview" className="hover-lift">
+                <BarChart3 className="h-4 w-4 mr-2" />
+                Overview
+              </TabsTrigger>
+              <TabsTrigger value="users" data-testid="analytics-users" className="hover-lift">
+                <Users className="h-4 w-4 mr-2" />
+                Users
+              </TabsTrigger>
+              <TabsTrigger value="content" data-testid="analytics-content" className="hover-lift">
+                <Globe className="h-4 w-4 mr-2" />
+                Content
+              </TabsTrigger>
+              <TabsTrigger value="performance" data-testid="analytics-performance" className="hover-lift">
+                <Activity className="h-4 w-4 mr-2" />
+                Performance
+              </TabsTrigger>
+            </TabsList>
 
           <TabsContent value="overview">
             <div className="space-y-6">
               {/* Key Metrics */}
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                <Card data-testid="total-users-metric">
+                <Card data-testid="total-users-metric" className="modern-card glassmorphism border border-primary/20 hover-lift group animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">Total Users</CardTitle>
-                    <Users className="h-4 w-4 text-muted-foreground" />
+                    <CardTitle className="text-sm font-semibold text-foreground">Total Users</CardTitle>
+                    <div className="p-2 rounded-xl bg-primary/10 group-hover:bg-primary/20 transition-all duration-300">
+                      <Users className="h-5 w-5 text-primary group-hover:scale-110 transition-transform" />
+                    </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="text-2xl font-bold">{(adminAnalytics as any)?.totalUsers || 0}</div>
-                    <p className="text-xs text-muted-foreground">
+                    <div className="text-3xl font-black text-foreground mb-1 stat-counter">{(adminAnalytics as any)?.totalUsers || 0}</div>
+                    <p className="text-sm text-muted-foreground flex items-center gap-2">
+                      <TrendingUp className="h-4 w-4 text-secondary" />
                       +{(adminAnalytics as any)?.newUsersInPeriod || 0} new this {timeframe}
                     </p>
                   </CardContent>
@@ -410,7 +469,28 @@ export default function AdminAnalytics() {
             </div>
           </TabsContent>
         </Tabs>
+        </div>
       </div>
     </>
   );
+}
+
+// Utility function for throttling mouse events
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return function (this: any, ...args: any[]) {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
 }
