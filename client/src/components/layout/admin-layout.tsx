@@ -85,11 +85,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
             <Shield className="h-6 w-6 text-white" />
           </div>
           <div>
-            <h2 className="text-xl font-black text-gradient">Admin Portal</h2>
-            <p className="text-sm text-muted-foreground font-semibold">TechVantage Solutions</p>
+            <h2 className="text-xl font-black text-foreground">Admin Portal</h2>
+            <p className="text-sm text-foreground/70 font-semibold">TechVantage Solutions</p>
           </div>
         </div>
-        <div className="glassmorphism px-4 py-2 rounded-full inline-flex items-center space-x-2 mt-4 animate-fade-in-up" style={{ animationDelay: '0.2s' }}>
+        <div className="glassmorphism px-4 py-2 rounded-full inline-flex items-center space-x-2 mt-4 animate-fade-in-up bg-primary/20" style={{ animationDelay: '0.2s' }}>
           <Sparkles className="h-4 w-4 text-primary" />
           <span className="text-xs font-bold text-foreground">System Control</span>
         </div>
@@ -101,8 +101,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <nav className="space-y-8">
           {ADMIN_NAVIGATION.map((section, sectionIndex) => (
             <div key={section.title} className="animate-fade-in-up" style={{ animationDelay: `${0.1 * (sectionIndex + 1)}s` }}>
-              <h3 className="text-xs font-bold text-primary uppercase tracking-wider mb-4 flex items-center gap-2">
-                <div className="w-4 h-0.5 bg-primary/50 rounded"></div>
+              <h3 className="text-xs font-bold text-foreground uppercase tracking-wider mb-4 flex items-center gap-2">
+                <div className="w-4 h-0.5 bg-primary rounded"></div>
                 {section.title}
               </h3>
               <div className="space-y-2">
@@ -112,8 +112,8 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       variant="ghost"
                       className={`w-full justify-start gap-3 hover-lift group transition-all duration-300 ${
                         isActive(item.href) 
-                          ? "glassmorphism bg-primary/10 border border-primary/30 text-primary shadow-glow" 
-                          : "hover:glassmorphism hover:bg-primary/5 hover:border hover:border-primary/20"
+                          ? "glassmorphism bg-primary/15 border border-primary/30 text-primary shadow-glow" 
+                          : "hover:glassmorphism hover:bg-primary/10 hover:border hover:border-primary/20 text-foreground hover:text-primary"
                       }`}
                       onClick={() => setSidebarOpen(false)}
                       data-testid={`nav-${item.href.replace(/\//g, '-')}`}
@@ -121,11 +121,11 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                       <div className={`p-1.5 rounded-lg transition-all duration-300 ${
                         isActive(item.href) 
                           ? "bg-primary/20 text-primary" 
-                          : "bg-primary/10 text-muted-foreground group-hover:bg-primary/15 group-hover:text-primary"
+                          : "bg-primary/10 text-foreground group-hover:bg-primary/15 group-hover:text-primary"
                       }`}>
                         <item.icon className="h-4 w-4 group-hover:scale-110 transition-transform" />
                       </div>
-                      <span className="font-semibold">{item.title}</span>
+                      <span className="font-semibold text-inherit">{item.title}</span>
                       {isActive(item.href) && (
                         <Badge variant="outline" className="ml-auto text-xs bg-primary/10 text-primary border-primary/30 animate-glow-pulse">
                           Active
@@ -145,18 +145,18 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <Separator className="mb-4 bg-primary/20" />
         <div className="space-y-3">
           <Link href="/">
-            <Button variant="ghost" className="w-full justify-start gap-3 hover-lift group glassmorphism hover:bg-secondary/10 hover:border hover:border-secondary/20 transition-all duration-300" data-testid="nav-home">
+            <Button variant="ghost" className="w-full justify-start gap-3 hover-lift group glassmorphism hover:bg-secondary/10 hover:border hover:border-secondary/20 transition-all duration-300 text-foreground hover:text-secondary" data-testid="nav-home">
               <div className="p-1.5 rounded-lg bg-secondary/10 text-secondary group-hover:bg-secondary/20 transition-all duration-300">
                 <Home className="h-4 w-4 group-hover:scale-110 transition-transform" />
               </div>
-              <span className="font-semibold">Back to Website</span>
+              <span className="font-semibold text-inherit">Back to Website</span>
             </Button>
           </Link>
           <Button variant="ghost" className="w-full justify-start gap-3 hover-lift group glassmorphism hover:bg-destructive/10 hover:border hover:border-destructive/20 text-destructive hover:text-destructive transition-all duration-300" data-testid="admin-logout">
             <div className="p-1.5 rounded-lg bg-destructive/10 text-destructive group-hover:bg-destructive/20 transition-all duration-300">
               <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </div>
-            <span className="font-semibold">Logout</span>
+            <span className="font-semibold text-inherit">Logout</span>
           </Button>
         </div>
       </div>
