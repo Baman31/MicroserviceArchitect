@@ -21,6 +21,7 @@ import Portfolio from "@/pages/portfolio";
 import About from "@/pages/about";
 import Blog from "@/pages/blog";
 import Contact from "@/pages/contact";
+import ServicesComparison from "@/pages/services-comparison";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import NotFound from "@/pages/not-found";
 
@@ -43,6 +44,7 @@ function Router() {
           <Route path="/about" component={About} />
           <Route path="/blog" component={Blog} />
           <Route path="/contact" component={Contact} />
+          <Route path="/services-comparison" component={ServicesComparison} />
           <Route path="/analytics" component={AnalyticsDashboard} />
           <Route component={NotFound} />
         </Switch>

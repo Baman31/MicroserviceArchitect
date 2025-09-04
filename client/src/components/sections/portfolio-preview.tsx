@@ -2,6 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Link } from "wouter";
 import { Button } from "@/components/ui/button";
 import ProjectCard from "@/components/ui/project-card";
+import { ProjectCardSkeleton } from "@/components/ui/skeleton-components";
 import { Project } from "@shared/schema";
 
 export default function PortfolioPreview() {
@@ -13,20 +14,17 @@ export default function PortfolioPreview() {
     return (
       <section className="py-20 bg-card" data-testid="portfolio-preview-section">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="portfolio-title">
+              Featured Projects
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto" data-testid="portfolio-description">
+              Explore some of our recent work and see how we've helped businesses achieve their digital transformation goals.
+            </p>
+          </div>
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="bg-muted rounded-lg overflow-hidden shadow-md border border-border animate-pulse">
-                <div className="w-full h-48 bg-muted"></div>
-                <div className="p-6">
-                  <div className="h-6 bg-muted rounded mb-2"></div>
-                  <div className="h-16 bg-muted rounded mb-4"></div>
-                  <div className="flex gap-2 mb-4">
-                    <div className="h-6 bg-muted rounded w-16"></div>
-                    <div className="h-6 bg-muted rounded w-20"></div>
-                  </div>
-                  <div className="h-4 bg-muted rounded w-32"></div>
-                </div>
-              </div>
+              <ProjectCardSkeleton key={i} />
             ))}
           </div>
         </div>

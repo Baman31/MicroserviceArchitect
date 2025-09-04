@@ -99,6 +99,15 @@ export const insertContactSchema = createInsertSchema(contacts).omit({
   id: true,
   status: true,
   createdAt: true,
+}).extend({
+  name: z.string().min(2, "Name must be at least 2 characters").max(50, "Name must be less than 50 characters"),
+  email: z.string().email("Please enter a valid email address"),
+  phone: z.string().min(10, "Phone number must be at least 10 digits").regex(/^[\+]?[1-9][\d]{1,14}$/, "Please enter a valid phone number"),
+  company: z.string().optional(),
+  service: z.string().optional(),
+  budget: z.string().optional(),
+  timeline: z.string().optional(),
+  description: z.string().min(10, "Please provide at least 10 characters describing your project").max(500, "Description must be less than 500 characters"),
 });
 
 export const insertQuoteSchema = createInsertSchema(quotes).omit({

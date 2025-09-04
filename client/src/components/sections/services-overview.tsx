@@ -1,4 +1,6 @@
+import { useState, useEffect } from "react";
 import ServiceCard from "@/components/ui/service-card";
+import { ServiceCardSkeleton } from "@/components/ui/skeleton-components";
 import { Code, Monitor, Search, Cloud, Infinity, Gauge, Sparkles } from "lucide-react";
 
 const services = [
@@ -47,6 +49,14 @@ const services = [
 ];
 
 export default function ServicesOverview() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    // Simulate loading time for demonstration
+    const timer = setTimeout(() => setIsLoading(false), 1000);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <section className="py-24 lg:py-32 relative overflow-hidden" data-testid="services-overview-section">
       {/* Background Elements */}
@@ -74,22 +84,34 @@ export default function ServicesOverview() {
         </div>
         
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-12">
-          {services.map((service, index) => (
-            <div 
-              key={index}
-              className="animate-fade-in-up"
-              style={{ animationDelay: `${index * 0.1}s` }}
-            >
-              <ServiceCard 
-                icon={service.icon}
-                title={service.title}
-                description={service.description}
-                href={service.href}
-                testId={service.testId}
-                index={index}
-              />
-            </div>
-          ))}
+          {isLoading ? (
+            [...Array(6)].map((_, index) => (
+              <div 
+                key={index}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <ServiceCardSkeleton />
+              </div>
+            ))
+          ) : (
+            services.map((service, index) => (
+              <div 
+                key={index}
+                className="animate-fade-in-up"
+                style={{ animationDelay: `${index * 0.1}s` }}
+              >
+                <ServiceCard 
+                  icon={service.icon}
+                  title={service.title}
+                  description={service.description}
+                  href={service.href}
+                  testId={service.testId}
+                  index={index}
+                />
+              </div>
+            ))
+          )}
         </div>
       </div>
     </section>
