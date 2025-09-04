@@ -1,4 +1,5 @@
 import { Helmet } from "react-helmet-async";
+import { Shield, Lock, Eye, UserCheck, FileText, Globe, Heart, Clock, ArrowRight } from "lucide-react";
 
 export default function PrivacyPolicy() {
   return (
@@ -9,25 +10,109 @@ export default function PrivacyPolicy() {
       </Helmet>
       
       <div className="min-h-screen bg-background" data-testid="privacy-policy-page">
-        {/* Header */}
-        <section className="py-16 bg-muted/30">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-4xl lg:text-5xl font-black font-poppins mb-6 text-gradient" data-testid="privacy-title">
-              Privacy Policy
+        {/* Hero Section */}
+        <section className="py-24 lg:py-32 hero-gradient text-white relative overflow-hidden">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-float"></div>
+            <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-primary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-2s' }}></div>
+            <div className="absolute top-3/4 left-3/4 w-48 h-48 bg-accent/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-4s' }}></div>
+          </div>
+
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <div className="flex items-center justify-center mb-8 animate-fade-in-up">
+              <div className="glassmorphism p-6 rounded-2xl">
+                <Shield className="h-16 w-16 text-white mx-auto" />
+              </div>
+            </div>
+            
+            <h1 className="text-5xl lg:text-7xl font-black font-poppins mb-8 leading-tight drop-shadow-2xl" data-testid="privacy-title">
+              <span className="animate-fade-in-up">Your Privacy</span>
+              <br />
+              <span className="text-gradient-accent animate-fade-in-up drop-shadow-lg" style={{ animationDelay: '0.2s' }}>Matters to Us</span>
             </h1>
-            <p className="text-lg text-muted-foreground" data-testid="privacy-last-updated">
-              Last updated: September 4, 2025
+
+            <p className="text-xl lg:text-2xl font-semibold mb-8 text-blue-100 max-w-4xl mx-auto leading-relaxed drop-shadow-lg animate-fade-in-up" style={{ animationDelay: '0.4s' }}>
+              Comprehensive data protection policies designed for Indian businesses with complete transparency and legal compliance.
             </p>
+
+            <div className="flex flex-wrap items-center justify-center gap-4 mb-8 animate-fade-in-up" style={{ animationDelay: '0.6s' }}>
+              <div className="glassmorphism px-4 py-2 rounded-full flex items-center gap-2">
+                <Clock className="h-4 w-4" />
+                <span className="text-sm font-medium">Last updated: September 4, 2025</span>
+              </div>
+              <div className="glassmorphism px-4 py-2 rounded-full flex items-center gap-2">
+                <Globe className="h-4 w-4" />
+                <span className="text-sm font-medium">India Compliant</span>
+              </div>
+              <div className="glassmorphism px-4 py-2 rounded-full flex items-center gap-2">
+                <FileText className="h-4 w-4" />
+                <span className="text-sm font-medium">IT Act 2000</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Quick Navigation */}
+        <section className="py-12 bg-muted/20">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="text-center mb-12">
+              <h2 className="text-3xl font-bold font-poppins mb-4">Privacy Overview</h2>
+              <p className="text-muted-foreground max-w-2xl mx-auto">Quick access to key privacy information and your rights under Indian data protection laws.</p>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="glassmorphism-card p-6 text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-primary/10 p-4 rounded-2xl mb-4 mx-auto w-fit group-hover:bg-primary/20 transition-colors">
+                  <Eye className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-bold mb-2">Data Collection</h3>
+                <p className="text-sm text-muted-foreground">What information we collect and why</p>
+              </div>
+              
+              <div className="glassmorphism-card p-6 text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-secondary/10 p-4 rounded-2xl mb-4 mx-auto w-fit group-hover:bg-secondary/20 transition-colors">
+                  <Lock className="h-8 w-8 text-secondary" />
+                </div>
+                <h3 className="font-bold mb-2">Data Security</h3>
+                <p className="text-sm text-muted-foreground">How we protect your information</p>
+              </div>
+              
+              <div className="glassmorphism-card p-6 text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-accent/10 p-4 rounded-2xl mb-4 mx-auto w-fit group-hover:bg-accent/20 transition-colors">
+                  <UserCheck className="h-8 w-8 text-accent" />
+                </div>
+                <h3 className="font-bold mb-2">Your Rights</h3>
+                <p className="text-sm text-muted-foreground">Control over your personal data</p>
+              </div>
+              
+              <div className="glassmorphism-card p-6 text-center group hover:scale-105 transition-transform duration-300">
+                <div className="bg-primary/10 p-4 rounded-2xl mb-4 mx-auto w-fit group-hover:bg-primary/20 transition-colors">
+                  <Globe className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="font-bold mb-2">Compliance</h3>
+                <p className="text-sm text-muted-foreground">Indian legal requirements</p>
+              </div>
+            </div>
           </div>
         </section>
 
         {/* Content */}
-        <section className="py-16">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="prose prose-lg max-w-none">
+        <section className="py-20 relative">
+          <div className="absolute inset-0 overflow-hidden">
+            <div className="absolute top-1/3 right-1/4 w-32 h-32 bg-primary/5 rounded-full blur-2xl"></div>
+            <div className="absolute bottom-1/3 left-1/4 w-48 h-48 bg-secondary/5 rounded-full blur-2xl"></div>
+          </div>
+          
+          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div className="space-y-12">
               
-              <div className="mb-8">
-                <h2 className="text-2xl font-bold mb-4">1. Introduction</h2>
+              <div className="glassmorphism-card p-8 hover:shadow-glow transition-all duration-300">
+                <div className="flex items-center gap-4 mb-6">
+                  <div className="bg-primary/10 p-3 rounded-xl">
+                    <FileText className="h-6 w-6 text-primary" />
+                  </div>
+                  <h2 className="text-3xl font-bold font-poppins text-gradient">1. Introduction</h2>
+                </div>
                 <p className="mb-4">
                   TechVantage Solutions ("we," "our," or "us") is committed to protecting your privacy and personal information. 
                   This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our 
