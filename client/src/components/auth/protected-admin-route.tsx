@@ -15,7 +15,7 @@ export function ProtectedAdminRoute({ children }: ProtectedAdminRouteProps) {
 
   const checkAdminAuth = async () => {
     try {
-      const response = await fetch('/api/admin/auth/verify', {
+      const response = await fetch('/api/secure/admin/session', {
         method: 'GET',
         credentials: 'include',
       });

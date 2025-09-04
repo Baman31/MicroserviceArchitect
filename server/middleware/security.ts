@@ -181,21 +181,24 @@ export const validationRules = {
  */
 export const requireAdminAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const authHeader = req.headers.authorization;
+    // Check for session token in both Authorization header and cookie
+    let token: string | null = null;
     
-    if (!authHeader || !authHeader.startsWith('Bearer ')) {
-      return res.status(401).json({ 
-        error: 'Admin authentication required',
-        code: 'NO_TOKEN'
-      });
+    // First check Authorization header
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+      token = authHeader.substring(7); // Remove 'Bearer ' prefix
     }
-
-    const token = authHeader.substring(7); // Remove 'Bearer ' prefix
+    
+    // If no Bearer token, check for session cookie
+    if (!token && req.cookies && req.cookies.admin_session) {
+      token = req.cookies.admin_session;
+    }
     
     if (!token) {
       return res.status(401).json({ 
-        error: 'Invalid authentication token',
-        code: 'INVALID_TOKEN'
+        error: 'Admin authentication required',
+        code: 'NO_TOKEN'
       });
     }
 
@@ -222,8 +225,8 @@ export const requireAdminAuth = async (req: Request, res: Response, next: NextFu
         params: req.params,
         query: req.query
       },
-      ipAddress: req.ip,
-      userAgent: req.get('User-Agent')
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('User-Agent') || 'unknown'
     });
 
     next();
@@ -239,8 +242,8 @@ export const requireAdminAuth = async (req: Request, res: Response, next: NextFu
         path: req.path,
         method: req.method
       },
-      ipAddress: req.ip,
-      userAgent: req.get('User-Agent')
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('User-Agent') || 'unknown'
     });
 
     res.status(500).json({ 
@@ -275,8 +278,8 @@ export const requirePermission = (permission: string) => {
           userPermissions: admin.permissions,
           userRole: admin.role
         },
-        ipAddress: req.ip,
-        userAgent: req.get('User-Agent')
+        ipAddress: req.ip || 'unknown',
+        userAgent: req.get('User-Agent') || 'unknown'
       });
 
       return res.status(403).json({ 

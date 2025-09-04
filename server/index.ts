@@ -1,4 +1,5 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cookieParser from "cookie-parser";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import { securityHeaders, generalRateLimit } from "./middleware/security";
@@ -15,6 +16,7 @@ app.use(generalRateLimit);
 
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+app.use(cookieParser());
 
 // Hidden admin authentication routes - not discoverable
 app.use('/api/secure/admin', adminAuthRouter);

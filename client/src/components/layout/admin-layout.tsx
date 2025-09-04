@@ -53,7 +53,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/admin/auth/logout', {
+      await fetch('/api/secure/admin/logout', {
         method: 'POST',
         credentials: 'include'
       });

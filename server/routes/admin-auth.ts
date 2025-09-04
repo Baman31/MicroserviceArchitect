@@ -27,8 +27,8 @@ router.post('/authenticate',
   async (req, res) => {
     try {
       const { username, password } = req.body;
-      const ipAddress = req.ip;
-      const userAgent = req.get('User-Agent');
+      const ipAddress = req.ip || 'unknown';
+      const userAgent = req.get('User-Agent') || 'unknown';
 
       const result = await adminAuthService.authenticateAdmin(
         username,
@@ -97,8 +97,8 @@ router.post('/logout', async (req, res) => {
     if (sessionToken) {
       await adminAuthService.logout(
         sessionToken,
-        req.ip,
-        req.get('User-Agent')
+        req.ip || 'unknown',
+        req.get('User-Agent') || 'unknown'
       );
     }
 
