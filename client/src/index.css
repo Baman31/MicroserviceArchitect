@@ -56,43 +56,6 @@
   --gradient-bg: linear-gradient(135deg, hsl(220, 15%, 6%) 0%, hsl(220, 13%, 10%) 100%);
 }
 
-.light {
-  --background: hsl(0, 0%, 100%);
-  --foreground: hsl(220, 13%, 9%);
-  --card: hsl(0, 0%, 100%);
-  --card-foreground: hsl(220, 13%, 9%);
-  --popover: hsl(0, 0%, 100%);
-  --popover-foreground: hsl(220, 13%, 9%);
-  --primary: hsl(217, 91%, 60%);
-  --primary-foreground: hsl(0, 0%, 98%);
-  --secondary: hsl(160, 84%, 39%);
-  --secondary-foreground: hsl(0, 0%, 98%);
-  --muted: hsl(220, 14%, 96%);
-  --muted-foreground: hsl(220, 8%, 46%);
-  --accent: hsl(220, 14%, 96%);
-  --accent-foreground: hsl(220, 13%, 9%);
-  --destructive: hsl(0, 84%, 60%);
-  --destructive-foreground: hsl(0, 0%, 98%);
-  --border: hsl(220, 13%, 91%);
-  --input: hsl(220, 13%, 91%);
-  --ring: hsl(217, 91%, 60%);
-  --chart-1: hsl(217, 91%, 60%);
-  --chart-2: hsl(160, 84%, 39%);
-  --chart-3: hsl(45, 93%, 58%);
-  --chart-4: hsl(271, 81%, 56%);
-  --chart-5: hsl(0, 84%, 60%);
-  --sidebar: hsl(0, 0%, 100%);
-  --sidebar-foreground: hsl(220, 13%, 9%);
-  --sidebar-primary: hsl(217, 91%, 60%);
-  --sidebar-primary-foreground: hsl(0, 0%, 98%);
-  --sidebar-accent: hsl(220, 14%, 96%);
-  --sidebar-accent-foreground: hsl(220, 13%, 9%);
-  --sidebar-border: hsl(220, 13%, 91%);
-  --sidebar-ring: hsl(217, 91%, 60%);
-  --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(160, 84%, 39%) 100%);
-  --gradient-accent: linear-gradient(135deg, hsl(271, 81%, 56%) 0%, hsl(217, 91%, 60%) 100%);
-  --gradient-bg: linear-gradient(135deg, hsl(0, 0%, 100%) 0%, hsl(220, 14%, 96%) 100%);
-}
 
 @layer base {
   * {
@@ -111,39 +74,35 @@
   }
 
   /* Enhanced text contrast for accessibility */
-  .dark .text-muted-foreground,
-  :root .text-muted-foreground {
+  .text-muted-foreground {
     color: hsl(220, 9%, 75%);
   }
   
-  .dark h1, .dark h2, .dark h3, .dark h4, .dark h5, .dark h6,
-  :root h1, :root h2, :root h3, :root h4, :root h5, :root h6 {
+  h1, h2, h3, h4, h5, h6 {
     color: hsl(0, 0%, 98%);
   }
   
-  .dark p, :root p {
+  p {
     color: hsl(220, 9%, 75%);
   }
   
   /* Enhanced form element styling for better visibility */
-  .dark input, .dark textarea, .dark select,
-  :root input, :root textarea, :root select {
+  input, textarea, select {
     color: hsl(0, 0%, 98%) !important;
     font-weight: 600;
   }
   
-  .dark input::placeholder, .dark textarea::placeholder,
-  :root input::placeholder, :root textarea::placeholder {
+  input::placeholder, textarea::placeholder {
     color: hsl(220, 9%, 65%) !important;
     font-weight: 500;
   }
   
   /* Ensure buttons and interactive elements have proper contrast */
-  .dark .bg-background, :root .bg-background {
+  .bg-background {
     background-color: hsl(220, 15%, 6%);
   }
   
-  .dark .text-foreground, :root .text-foreground {
+  .text-foreground {
     color: hsl(0, 0%, 98%);
   }
 }
@@ -169,11 +128,6 @@
     background: hsl(var(--primary) / 0.1);
     backdrop-filter: blur(10px);
     border: 1px solid hsl(var(--primary) / 0.2);
-  }
-  
-  .light .glassmorphism {
-    background: hsl(var(--primary) / 0.08);
-    border: 1px solid hsl(var(--primary) / 0.15);
   }
   
   .text-gradient {
