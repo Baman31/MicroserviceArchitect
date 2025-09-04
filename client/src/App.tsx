@@ -41,6 +41,7 @@ import Communications from "@/pages/admin/communications";
 import ContentManagement from "@/pages/admin/content-management";
 import AdminAnalytics from "@/pages/admin/admin-analytics";
 import ActivityLogs from "@/pages/admin/activity-logs";
+import { AdminLogin } from "@/pages/admin/admin-login";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -48,6 +49,9 @@ function Router() {
   
   return (
     <Switch>
+      {/* Admin Login Route - Hidden Path */}
+      <Route path="/admin/login" component={AdminLogin} />
+      
       {/* Admin Routes */}
       <Route path="/admin" nest>
         <AdminLayout>

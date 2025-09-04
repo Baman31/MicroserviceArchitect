@@ -7,17 +7,7 @@ import { orchestrator } from "./services/microservice-orchestrator";
 import { contentService } from "./services/content-service";
 import { contactService } from "./services/contact-service";
 import { analyticsService } from "./services/analytics-service";
-
-// Admin authentication middleware
-const requireAdmin = (req: any, res: any, next: any) => {
-  // For now, we'll implement basic auth. In production, use proper JWT/session management
-  const authHeader = req.headers.authorization;
-  if (!authHeader || !authHeader.startsWith('Bearer ')) {
-    return res.status(401).json({ message: "Admin authentication required" });
-  }
-  // TODO: Implement proper admin authentication
-  next();
-};
+import { requireAdminAuth, requirePermission, requireRole } from "./middleware/security";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Projects API routes
@@ -477,8 +467,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // ADMIN API ROUTES
 
-  // Admin User Management
-  app.get("/api/admin/users", async (req, res) => {
+  // Admin User Management - Secure Routes
+  app.get("/api/admin/users", requireAdminAuth, requirePermission('manage_users'), async (req, res) => {
     try {
       const users = await storage.getUsers();
       res.json(users);
@@ -488,7 +478,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.get("/api/admin/users/:id", async (req, res) => {
+  app.get("/api/admin/users/:id", requireAdminAuth, requirePermission('view_users'), async (req, res) => {
     try {
       const { id } = req.params;
       const user = await storage.getUser(id);
@@ -504,7 +494,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/users/:id", async (req, res) => {
+  app.put("/api/admin/users/:id", requireAdminAuth, requirePermission('manage_users'), async (req, res) => {
     try {
       const { id } = req.params;
       const partialSchema = insertUserSchema.partial();
@@ -539,7 +529,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.delete("/api/admin/users/:id", async (req, res) => {
+  app.delete("/api/admin/users/:id", requireAdminAuth, requireRole(['super_admin']), async (req, res) => {
     try {
       const { id } = req.params;
       const success = await storage.deleteUser(id);
@@ -566,7 +556,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // Admin Management
-  app.get("/api/admin/admins", async (req, res) => {
+  app.get("/api/admin/admins", requireAdminAuth, requireRole(['super_admin']), async (req, res) => {
     try {
       const admins = await storage.getAdmins();
       res.json(admins);
@@ -576,7 +566,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.post("/api/admin/admins", async (req, res) => {
+  app.post("/api/admin/admins", requireAdminAuth, requireRole(['super_admin']), async (req, res) => {
     try {
       const validatedData = insertAdminSchema.parse(req.body);
       const admin = await storage.createAdmin(validatedData);
@@ -604,7 +594,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  app.put("/api/admin/admins/:id", async (req, res) => {
+  app.put("/api/admin/admins/:id", requireAdminAuth, requireRole(['super_admin']), async (req, res) => {
     try {
       const { id } = req.params;
       const partialSchema = insertAdminSchema.partial();

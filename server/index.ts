@@ -1,10 +1,23 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { securityHeaders, generalRateLimit } from "./middleware/security";
+import { adminAuthRouter } from "./routes/admin-auth";
 
 const app = express();
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+
+// Trust proxy for proper IP detection in production
+app.set('trust proxy', true);
+
+// Apply security middleware early
+app.use(securityHeaders);
+app.use(generalRateLimit);
+
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: false, limit: '10mb' }));
+
+// Hidden admin authentication routes - not discoverable
+app.use('/api/secure/admin', adminAuthRouter);
 
 app.use((req, res, next) => {
   const start = Date.now();

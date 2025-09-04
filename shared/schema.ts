@@ -40,6 +40,42 @@ export const activityLogs = pgTable("activity_logs", {
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
+export const loginAttempts = pgTable("login_attempts", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  username: text("username").notNull(),
+  ipAddress: text("ip_address").notNull(),
+  success: boolean("success").default(false),
+  failureReason: text("failure_reason"), // invalid_credentials, account_locked, account_suspended
+  userAgent: text("user_agent"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const adminSessions = pgTable("admin_sessions", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  adminId: varchar("admin_id").references(() => admins.id).notNull(),
+  sessionToken: text("session_token").notNull().unique(),
+  ipAddress: text("ip_address").notNull(),
+  userAgent: text("user_agent"),
+  expiresAt: timestamp("expires_at").notNull(),
+  lastActivityAt: timestamp("last_activity_at").defaultNow(),
+  active: boolean("active").default(true),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
+export const securityEvents = pgTable("security_events", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  adminId: varchar("admin_id").references(() => admins.id),
+  eventType: text("event_type").notNull(), // suspicious_login, brute_force_attempt, privilege_escalation
+  severity: text("severity").notNull(), // low, medium, high, critical
+  details: json("details").$type<any>(),
+  ipAddress: text("ip_address"),
+  userAgent: text("user_agent"),
+  resolved: boolean("resolved").default(false),
+  resolvedBy: varchar("resolved_by").references(() => admins.id),
+  resolvedAt: timestamp("resolved_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+});
+
 export const systemSettings = pgTable("system_settings", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   key: text("key").notNull().unique(),
@@ -216,6 +252,23 @@ export const insertQuoteSchema = createInsertSchema(quotes).omit({
   createdAt: true,
 });
 
+export const insertLoginAttemptSchema = createInsertSchema(loginAttempts).omit({
+  id: true,
+  createdAt: true,
+});
+
+export const insertAdminSessionSchema = createInsertSchema(adminSessions).omit({
+  id: true,
+  createdAt: true,
+  lastActivityAt: true,
+});
+
+export const insertSecurityEventSchema = createInsertSchema(securityEvents).omit({
+  id: true,
+  createdAt: true,
+  resolvedAt: true,
+});
+
 // Types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -249,3 +302,12 @@ export type InsertContact = z.infer<typeof insertContactSchema>;
 
 export type Quote = typeof quotes.$inferSelect;
 export type InsertQuote = z.infer<typeof insertQuoteSchema>;
+
+export type LoginAttempt = typeof loginAttempts.$inferSelect;
+export type InsertLoginAttempt = z.infer<typeof insertLoginAttemptSchema>;
+
+export type AdminSession = typeof adminSessions.$inferSelect;
+export type InsertAdminSession = z.infer<typeof insertAdminSessionSchema>;
+
+export type SecurityEvent = typeof securityEvents.$inferSelect;
+export type InsertSecurityEvent = z.infer<typeof insertSecurityEventSchema>;
