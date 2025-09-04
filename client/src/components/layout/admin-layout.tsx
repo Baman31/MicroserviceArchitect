@@ -48,7 +48,22 @@ const ADMIN_NAVIGATION = [
 
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location] = useLocation();
+  const [, setLocation] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/admin/auth/logout', {
+        method: 'POST',
+        credentials: 'include'
+      });
+    } catch (error) {
+      console.error('Logout error:', error);
+    } finally {
+      // Always redirect to login regardless of API call result
+      setLocation('/admin/login');
+    }
+  };
 
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -141,7 +156,12 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
               <span className="font-semibold text-inherit">Back to Website</span>
             </Button>
           </Link>
-          <Button variant="ghost" className="w-full justify-start gap-3 group transition-colors duration-200 hover:bg-destructive/10 text-destructive hover:text-destructive" data-testid="admin-logout">
+          <Button 
+            variant="ghost" 
+            className="w-full justify-start gap-3 group transition-colors duration-200 hover:bg-destructive/10 text-destructive hover:text-destructive" 
+            data-testid="admin-logout"
+            onClick={handleLogout}
+          >
             <div className="p-1.5 rounded-lg bg-destructive/10 text-destructive group-hover:bg-destructive/20 transition-all duration-300">
               <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </div>

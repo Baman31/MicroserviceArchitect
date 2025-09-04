@@ -64,7 +64,7 @@ export function AdminLogin() {
       if (response.ok) {
         const data = await response.json();
         if (data.valid) {
-          setLocation('/admin/dashboard');
+          setLocation('/admin');
         }
       } else {
         localStorage.removeItem('admin_token');
@@ -114,7 +114,7 @@ export function AdminLogin() {
         setLoginAttempts({ attempts: 0 });
         
         // Redirect to admin dashboard
-        setLocation('/admin/dashboard');
+        setLocation('/admin');
       } else {
         // Handle failed login
         const newAttempts = loginAttempts.attempts + 1;

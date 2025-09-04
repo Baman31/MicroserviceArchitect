@@ -42,6 +42,7 @@ import ContentManagement from "@/pages/admin/content-management";
 import AdminAnalytics from "@/pages/admin/admin-analytics";
 import ActivityLogs from "@/pages/admin/activity-logs";
 import { AdminLogin } from "@/pages/admin/admin-login";
+import { ProtectedAdminRoute } from "@/components/auth/protected-admin-route";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -52,20 +53,22 @@ function Router() {
       {/* Admin Login Route - Hidden Path */}
       <Route path="/admin/login" component={AdminLogin} />
       
-      {/* Admin Routes */}
+      {/* Admin Routes - Protected */}
       <Route path="/admin" nest>
-        <AdminLayout>
-          <Route path="/" component={AdminDashboard} />
-          <Route path="/users" component={UserManagement} />
-          <Route path="/admins" component={AdminManagement} />
-          <Route path="/settings" component={SystemSettings} />
-          <Route path="/communications" component={Communications} />
-          <Route path="/content" component={ContentManagement} />
-          <Route path="/analytics" component={AdminAnalytics} />
-          <Route path="/activity-logs" component={ActivityLogs} />
-          <Route path="/testimonials" component={TestimonialsAdmin} />
-          <Route path="/blog" component={() => <div className="p-6">Blog Management Page</div>} />
-        </AdminLayout>
+        <ProtectedAdminRoute>
+          <AdminLayout>
+            <Route path="/" component={AdminDashboard} />
+            <Route path="/users" component={UserManagement} />
+            <Route path="/admins" component={AdminManagement} />
+            <Route path="/settings" component={SystemSettings} />
+            <Route path="/communications" component={Communications} />
+            <Route path="/content" component={ContentManagement} />
+            <Route path="/analytics" component={AdminAnalytics} />
+            <Route path="/activity-logs" component={ActivityLogs} />
+            <Route path="/testimonials" component={TestimonialsAdmin} />
+            <Route path="/blog" component={() => <div className="p-6">Blog Management Page</div>} />
+          </AdminLayout>
+        </ProtectedAdminRoute>
       </Route>
 
       {/* Public Routes */}
