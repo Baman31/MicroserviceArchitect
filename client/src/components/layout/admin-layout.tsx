@@ -47,19 +47,6 @@ const ADMIN_NAVIGATION = [
 export default function AdminLayout({ children }: AdminLayoutProps) {
   const [location] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({
-        x: (e.clientX / window.innerWidth) * 100,
-        y: (e.clientY / window.innerHeight) * 100,
-      });
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    return () => window.removeEventListener('mousemove', handleMouseMove);
-  }, []);
 
   const isActive = (href: string) => {
     if (href === "/admin") {
@@ -110,10 +97,10 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
                   <Link key={item.href} href={item.href}>
                     <Button
                       variant="ghost"
-                      className={`w-full justify-start gap-3 hover-lift group transition-all duration-300 ${
+                      className={`w-full justify-start gap-3 group transition-colors duration-200 ${
                         isActive(item.href) 
-                          ? "glassmorphism bg-primary/15 border border-primary/30 text-primary shadow-glow" 
-                          : "hover:glassmorphism hover:bg-primary/10 hover:border hover:border-primary/20 text-foreground hover:text-primary"
+                          ? "glassmorphism bg-primary/15 border border-primary/30 text-primary" 
+                          : "hover:bg-primary/10 text-foreground hover:text-primary"
                       }`}
                       onClick={() => setSidebarOpen(false)}
                       data-testid={`nav-${item.href.replace(/\//g, '-')}`}
@@ -145,14 +132,14 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
         <Separator className="mb-4 bg-primary/20" />
         <div className="space-y-3">
           <Link href="/">
-            <Button variant="ghost" className="w-full justify-start gap-3 hover-lift group glassmorphism hover:bg-secondary/10 hover:border hover:border-secondary/20 transition-all duration-300 text-foreground hover:text-secondary" data-testid="nav-home">
+            <Button variant="ghost" className="w-full justify-start gap-3 group transition-colors duration-200 hover:bg-secondary/10 text-foreground hover:text-secondary" data-testid="nav-home">
               <div className="p-1.5 rounded-lg bg-secondary/10 text-secondary group-hover:bg-secondary/20 transition-all duration-300">
                 <Home className="h-4 w-4 group-hover:scale-110 transition-transform" />
               </div>
               <span className="font-semibold text-inherit">Back to Website</span>
             </Button>
           </Link>
-          <Button variant="ghost" className="w-full justify-start gap-3 hover-lift group glassmorphism hover:bg-destructive/10 hover:border hover:border-destructive/20 text-destructive hover:text-destructive transition-all duration-300" data-testid="admin-logout">
+          <Button variant="ghost" className="w-full justify-start gap-3 group transition-colors duration-200 hover:bg-destructive/10 text-destructive hover:text-destructive" data-testid="admin-logout">
             <div className="p-1.5 rounded-lg bg-destructive/10 text-destructive group-hover:bg-destructive/20 transition-all duration-300">
               <LogOut className="h-4 w-4 group-hover:scale-110 transition-transform" />
             </div>
@@ -164,11 +151,7 @@ export default function AdminLayout({ children }: AdminLayoutProps) {
   );
 
   return (
-    <div className="min-h-screen flex relative overflow-hidden"
-      style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(66, 153, 225, 0.08) 0%, transparent 50%), var(--gradient-bg)`,
-      }}
-    >
+    <div className="min-h-screen flex relative overflow-hidden" style={{ background: 'var(--gradient-bg)' }}>
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/3 rounded-full blur-3xl animate-float animate-morph"></div>
