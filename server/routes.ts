@@ -103,6 +103,65 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.get("/api/testimonials/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const testimonial = await contentService.getTestimonialById(id);
+      
+      if (!testimonial) {
+        return res.status(404).json({ message: "Testimonial not found" });
+      }
+      
+      res.json(testimonial);
+    } catch (error) {
+      console.error("Error fetching testimonial:", error);
+      res.status(500).json({ message: "Failed to fetch testimonial" });
+    }
+  });
+
+  app.put("/api/testimonials/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      
+      // Validate partial update data
+      const partialSchema = insertTestimonialSchema.partial();
+      const validatedData = partialSchema.parse(req.body);
+      
+      const testimonial = await contentService.updateTestimonial(id, validatedData);
+      
+      if (!testimonial) {
+        return res.status(404).json({ message: "Testimonial not found" });
+      }
+      
+      res.json(testimonial);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error updating testimonial:", error);
+      res.status(500).json({ message: "Failed to update testimonial" });
+    }
+  });
+
+  app.delete("/api/testimonials/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await contentService.deleteTestimonial(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "Testimonial not found" });
+      }
+      
+      res.json({ message: "Testimonial deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting testimonial:", error);
+      res.status(500).json({ message: "Failed to delete testimonial" });
+    }
+  });
+
   // Blog posts API routes
   app.get("/api/blog-posts", async (req, res) => {
     try {

@@ -11,6 +11,7 @@ import { Calendar, User, ArrowRight, Search, Clock, Eye, BookOpen, TrendingUp, S
 import { BlogPost } from "@shared/schema";
 import { Link } from "wouter";
 import { motion } from "framer-motion";
+import OptimizedImage from "@/components/ui/optimized-image";
 
 const categories = [
   { value: "all", label: "All Posts", icon: BookOpen, count: 0 },
@@ -200,11 +201,13 @@ export default function Blog() {
                       <Card className="group overflow-hidden hover:shadow-xl transition-all duration-300 border-0 shadow-lg bg-gradient-to-br from-card to-card/95 hover:-translate-y-1" data-testid={`blog-post-${post.id}`}>
                         <div className="relative overflow-hidden">
                           {post.imageUrl ? (
-                            <img 
+                            <OptimizedImage
                               src={post.imageUrl} 
                               alt={post.title} 
-                              className="w-full h-56 object-cover group-hover:scale-105 transition-transform duration-300" 
-                              data-testid={`blog-post-${post.id}-image`}
+                              className="w-full h-56 group-hover:scale-105 transition-transform duration-300" 
+                              width={400}
+                              height={224}
+                              lazy={true}
                             />
                           ) : (
                             <div className="w-full h-56 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
