@@ -100,14 +100,14 @@ export default function Mission() {
               <div className="absolute top-8 -left-6 glassmorphism p-4 rounded-2xl animate-float max-w-48">
                 <div className="text-sm font-medium text-center">
                   <div className="text-primary font-bold text-lg">500+</div>
-                  <div className="text-muted-foreground">Hours Delivered</div>
+                  <div className="text-foreground">Hours Delivered</div>
                 </div>
               </div>
               
               <div className="absolute bottom-8 -right-6 glassmorphism p-4 rounded-2xl animate-float max-w-48" style={{ animationDelay: '-2s' }}>
                 <div className="text-sm font-medium text-center">
                   <div className="text-secondary font-bold text-lg">5 Star</div>
-                  <div className="text-muted-foreground">Average Rating</div>
+                  <div className="text-foreground">Average Rating</div>
                 </div>
               </div>
             </div>

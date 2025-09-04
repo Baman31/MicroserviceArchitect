@@ -90,7 +90,7 @@ export default function Hero() {
             {/* Floating Badge */}
             <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8 animate-glow-pulse">
               <Sparkles className="h-5 w-5 text-secondary" />
-              <span className="text-sm font-bold drop-shadow-sm">Leading IT Solutions Provider</span>
+              <span className="text-sm font-bold text-foreground drop-shadow-sm">Leading IT Solutions Provider</span>
             </div>
 
             <h1 className="text-5xl lg:text-7xl font-black font-poppins mb-8 leading-tight drop-shadow-2xl" data-testid="hero-title">
@@ -182,14 +182,14 @@ export default function Hero() {
               <div className="absolute top-8 -left-4 glassmorphism p-4 rounded-2xl animate-float">
                 <div className="flex items-center space-x-2">
                   <Code className="h-5 w-5 text-primary" />
-                  <span className="text-sm font-medium">React & Node.js</span>
+                  <span className="text-sm font-medium text-foreground">React & Node.js</span>
                 </div>
               </div>
               
               <div className="absolute bottom-8 -right-4 glassmorphism p-4 rounded-2xl animate-float" style={{ animationDelay: '-2s' }}>
                 <div className="flex items-center space-x-2">
                   <Rocket className="h-5 w-5 text-secondary" />
-                  <span className="text-sm font-medium">Cloud Native</span>
+                  <span className="text-sm font-medium text-foreground">Cloud Native</span>
                 </div>
               </div>
             </div>

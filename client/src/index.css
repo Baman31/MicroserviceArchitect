@@ -166,9 +166,14 @@
   }
   
   .glassmorphism {
-    background: rgba(255, 255, 255, 0.05);
+    background: hsl(var(--primary) / 0.1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid hsl(var(--primary) / 0.2);
+  }
+  
+  .light .glassmorphism {
+    background: hsl(var(--primary) / 0.08);
+    border: 1px solid hsl(var(--primary) / 0.15);
   }
   
   .text-gradient {

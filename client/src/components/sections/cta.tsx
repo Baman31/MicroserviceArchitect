@@ -25,7 +25,7 @@ export default function CTA() {
         {/* Section Badge */}
         <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8 animate-glow-pulse">
           <Rocket className="h-5 w-5 text-secondary" />
-          <span className="text-sm font-medium">Ready to Get Started?</span>
+          <span className="text-sm font-medium text-foreground">Ready to Get Started?</span>
         </div>
 
         <h2 className="text-4xl lg:text-6xl font-bold font-poppins mb-8 leading-tight animate-fade-in-up" data-testid="cta-title">
@@ -75,8 +75,8 @@ export default function CTA() {
                 <MapPin className="h-6 w-6 text-secondary" />
               </div>
               <div className="text-left">
-                <div className="text-sm text-blue-200 mb-1">Office Location</div>
-                <div className="font-semibold">Malviya Nagar, Jaipur, Rajasthan</div>
+                <div className="text-sm text-blue-200 mb-1 text-foreground/80">Office Location</div>
+                <div className="font-semibold text-foreground">Malviya Nagar, Jaipur, Rajasthan</div>
               </div>
             </div>
           </div>
@@ -87,8 +87,8 @@ export default function CTA() {
                 <Mail className="h-6 w-6 text-secondary" />
               </div>
               <div className="text-left">
-                <div className="text-sm text-blue-200 mb-1">Email Us</div>
-                <div className="font-semibold">hello@techvantagesolutions.com</div>
+                <div className="text-sm text-blue-200 mb-1 text-foreground/80">Email Us</div>
+                <div className="font-semibold text-foreground">hello@techvantagesolutions.com</div>
               </div>
             </div>
           </div>
