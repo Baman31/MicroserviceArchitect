@@ -56,7 +56,25 @@ export default function AdminAnalytics() {
     return () => window.removeEventListener('mousemove', throttledHandler);
   }, []);
 
-  const { data: adminAnalytics = {
+  const { data: adminAnalytics, isLoading: analyticsLoading } = useQuery({
+    queryKey: ['/api/admin/analytics/overview', timeframe],
+    refetchInterval: 60000,
+  });
+
+  // Define analytics with fallback values and proper typing
+  const analyticsData: {
+    userStatusBreakdown: {
+      active: number;
+      blocked: number;
+      pending: number;
+      suspended: number;
+    };
+    totalProjects: number;
+    featuredProjects: number;
+    totalTestimonials: number;
+    featuredTestimonials: number;
+    totalContacts: number;
+  } = adminAnalytics || {
     userStatusBreakdown: {
       active: 0,
       blocked: 0,
@@ -68,10 +86,7 @@ export default function AdminAnalytics() {
     totalTestimonials: 0,
     featuredTestimonials: 0,
     totalContacts: 0
-  }, isLoading: analyticsLoading } = useQuery({
-    queryKey: ['/api/admin/analytics/overview', timeframe],
-    refetchInterval: 60000,
-  });
+  };
 
   const { data: serviceAnalytics, isLoading: serviceLoading } = useQuery({
     queryKey: ['/api/analytics/service-usage'],
@@ -314,10 +329,10 @@ export default function AdminAnalytics() {
                     <PieChart>
                       <Pie
                         data={[
-                          { name: 'Active', value: adminAnalytics?.userStatusBreakdown?.active || 0, color: '#10B981' },
-                          { name: 'Blocked', value: adminAnalytics?.userStatusBreakdown?.blocked || 0, color: '#EF4444' },
-                          { name: 'Pending', value: adminAnalytics?.userStatusBreakdown?.pending || 0, color: '#F59E0B' },
-                          { name: 'Suspended', value: adminAnalytics?.userStatusBreakdown?.suspended || 0, color: '#8B5CF6' },
+                          { name: 'Active', value: analyticsData.userStatusBreakdown.active, color: '#10B981' },
+                          { name: 'Blocked', value: analyticsData.userStatusBreakdown.blocked, color: '#EF4444' },
+                          { name: 'Pending', value: analyticsData.userStatusBreakdown.pending, color: '#F59E0B' },
+                          { name: 'Suspended', value: analyticsData.userStatusBreakdown.suspended, color: '#8B5CF6' },
                         ]}
                         cx="50%"
                         cy="50%"
@@ -327,10 +342,10 @@ export default function AdminAnalytics() {
                         label={({ name, value }) => `${name}: ${value}`}
                       >
                         {[
-                          { name: 'Active', value: adminAnalytics?.userStatusBreakdown?.active || 0, color: '#10B981' },
-                          { name: 'Blocked', value: adminAnalytics?.userStatusBreakdown?.blocked || 0, color: '#EF4444' },
-                          { name: 'Pending', value: adminAnalytics?.userStatusBreakdown?.pending || 0, color: '#F59E0B' },
-                          { name: 'Suspended', value: adminAnalytics?.userStatusBreakdown?.suspended || 0, color: '#8B5CF6' },
+                          { name: 'Active', value: analyticsData.userStatusBreakdown.active, color: '#10B981' },
+                          { name: 'Blocked', value: analyticsData.userStatusBreakdown.blocked, color: '#EF4444' },
+                          { name: 'Pending', value: analyticsData.userStatusBreakdown.pending, color: '#F59E0B' },
+                          { name: 'Suspended', value: analyticsData.userStatusBreakdown.suspended, color: '#8B5CF6' },
                         ].map((entry, index) => (
                           <Cell key={`cell-${index}`} fill={entry.color} />
                         ))}
@@ -372,11 +387,11 @@ export default function AdminAnalytics() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span>Total Projects</span>
-                        <Badge>{adminAnalytics?.totalProjects || 0}</Badge>
+                        <Badge>{analyticsData.totalProjects}</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Featured Projects</span>
-                        <Badge variant="secondary">{adminAnalytics?.featuredProjects || 0}</Badge>
+                        <Badge variant="secondary">{analyticsData.featuredProjects}</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Categories</span>
@@ -394,11 +409,11 @@ export default function AdminAnalytics() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span>Total Testimonials</span>
-                        <Badge>{adminAnalytics?.totalTestimonials || 0}</Badge>
+                        <Badge>{analyticsData.totalTestimonials}</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Featured</span>
-                        <Badge variant="secondary">{adminAnalytics?.featuredTestimonials || 0}</Badge>
+                        <Badge variant="secondary">{analyticsData.featuredTestimonials}</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Average Rating</span>
@@ -416,7 +431,7 @@ export default function AdminAnalytics() {
                     <div className="space-y-3">
                       <div className="flex justify-between items-center">
                         <span>Contact Forms</span>
-                        <Badge>{adminAnalytics?.totalContacts || 0}</Badge>
+                        <Badge>{analyticsData.totalContacts}</Badge>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Conversion Rate</span>

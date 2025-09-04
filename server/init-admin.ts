@@ -72,7 +72,7 @@ async function initializeDefaultAdmin() {
       details: {
         message: 'Default admin user initialized',
         initialSetup: true
-      },
+      } as any,
       ipAddress: '127.0.0.1',
       userAgent: 'system-init'
     });
