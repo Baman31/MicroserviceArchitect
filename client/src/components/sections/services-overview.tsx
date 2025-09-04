@@ -68,9 +68,9 @@ export default function ServicesOverview() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-20 animate-fade-in-up">
           {/* Section Badge */}
-          <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
+          <div className="bg-primary/10 backdrop-blur-sm border border-primary/20 px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
             <Sparkles className="h-5 w-5 text-primary" />
-            <span className="text-sm font-medium">Our Expertise</span>
+            <span className="text-sm font-medium text-foreground">Our Expertise</span>
           </div>
 
           <h2 className="text-4xl lg:text-6xl font-bold font-poppins mb-8 leading-tight" data-testid="services-title">
