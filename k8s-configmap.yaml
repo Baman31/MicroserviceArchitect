@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: techvantage-config
+data:
+  ga-measurement-id: "G-XXXXXXXXXX"  # Replace with your actual GA4 measurement ID
+  node-env: "production"
+  app-version: "1.0.0"
+  log-level: "info"

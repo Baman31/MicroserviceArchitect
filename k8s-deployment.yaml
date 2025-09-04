@@ -1,0 +1,108 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: techvantage-webapp
+  labels:
+    app: techvantage-webapp
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: techvantage-webapp
+  template:
+    metadata:
+      labels:
+        app: techvantage-webapp
+    spec:
+      containers:
+      - name: techvantage-webapp
+        image: your-registry/techvantage-webapp:latest
+        ports:
+        - containerPort: 5000
+        env:
+        - name: NODE_ENV
+          value: "production"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: techvantage-secrets
+              key: database-url
+        - name: VITE_GA_MEASUREMENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: techvantage-config
+              key: ga-measurement-id
+        - name: VITE_SENTRY_DSN
+          valueFrom:
+            secretKeyRef:
+              name: techvantage-secrets
+              key: sentry-dsn
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+        livenessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /api/health
+            port: 5000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 3
+        securityContext:
+          runAsNonRoot: true
+          runAsUser: 1001
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: false
+          capabilities:
+            drop:
+            - ALL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: techvantage-webapp-service
+spec:
+  selector:
+    app: techvantage-webapp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 5000
+  type: ClusterIP
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: techvantage-webapp-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+spec:
+  tls:
+  - hosts:
+    - your-domain.com
+    secretName: techvantage-tls
+  rules:
+  - host: your-domain.com
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: techvantage-webapp-service
+            port:
+              number: 80
