@@ -32,39 +32,67 @@ import CookiePolicy from "@/pages/cookie-policy";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import Booking from "@/pages/booking";
 import TestimonialsAdmin from "@/pages/admin/testimonials";
+import AdminLayout from "@/components/layout/admin-layout";
+import AdminDashboard from "@/pages/admin/admin-dashboard";
+import UserManagement from "@/pages/admin/user-management";
+import AdminManagement from "@/pages/admin/admin-management";
+import SystemSettings from "@/pages/admin/system-settings";
+import Communications from "@/pages/admin/communications";
+import ContentManagement from "@/pages/admin/content-management";
+import AdminAnalytics from "@/pages/admin/admin-analytics";
 import NotFound from "@/pages/not-found";
 
 function Router() {
   useAnalytics();
   
   return (
-    <div className="min-h-screen flex flex-col">
-      <Header />
-      <main className="flex-1">
-        <Switch>
-          <Route path="/" component={Home} />
-          <Route path="/services/web-development" component={WebDevelopment} />
-          <Route path="/services/web-applications" component={WebApplications} />
-          <Route path="/services/seo-marketing" component={SeoMarketing} />
-          <Route path="/services/cloud-solutions" component={CloudSolutions} />
-          <Route path="/services/devops" component={DevOps} />
-          <Route path="/services/optimization" component={Optimization} />
-          <Route path="/portfolio" component={Portfolio} />
-          <Route path="/about" component={About} />
-          <Route path="/blog" component={Blog} />
-          <Route path="/contact" component={Contact} />
-          <Route path="/services-comparison" component={ServicesComparison} />
-          <Route path="/privacy-policy" component={PrivacyPolicy} />
-          <Route path="/terms-of-service" component={TermsOfService} />
-          <Route path="/cookie-policy" component={CookiePolicy} />
-          <Route path="/analytics" component={AnalyticsDashboard} />
-          <Route path="/booking" component={Booking} />
-          <Route path="/admin/testimonials" component={TestimonialsAdmin} />
-          <Route component={NotFound} />
-        </Switch>
-      </main>
-      <Footer />
-    </div>
+    <Switch>
+      {/* Admin Routes */}
+      <Route path="/admin" nest>
+        <AdminLayout>
+          <Route path="/" component={AdminDashboard} />
+          <Route path="/users" component={UserManagement} />
+          <Route path="/admins" component={AdminManagement} />
+          <Route path="/settings" component={SystemSettings} />
+          <Route path="/communications" component={Communications} />
+          <Route path="/projects" component={ContentManagement} />
+          <Route path="/analytics" component={AdminAnalytics} />
+          <Route path="/activity" component={() => <div className="p-6">Activity Logs Page</div>} />
+          <Route path="/testimonials" component={TestimonialsAdmin} />
+          <Route path="/blog" component={() => <div className="p-6">Blog Management Page</div>} />
+        </AdminLayout>
+      </Route>
+
+      {/* Public Routes */}
+      <Route>
+        <div className="min-h-screen flex flex-col">
+          <Header />
+          <main className="flex-1">
+            <Switch>
+              <Route path="/" component={Home} />
+              <Route path="/services/web-development" component={WebDevelopment} />
+              <Route path="/services/web-applications" component={WebApplications} />
+              <Route path="/services/seo-marketing" component={SeoMarketing} />
+              <Route path="/services/cloud-solutions" component={CloudSolutions} />
+              <Route path="/services/devops" component={DevOps} />
+              <Route path="/services/optimization" component={Optimization} />
+              <Route path="/portfolio" component={Portfolio} />
+              <Route path="/about" component={About} />
+              <Route path="/blog" component={Blog} />
+              <Route path="/contact" component={Contact} />
+              <Route path="/services-comparison" component={ServicesComparison} />
+              <Route path="/privacy-policy" component={PrivacyPolicy} />
+              <Route path="/terms-of-service" component={TermsOfService} />
+              <Route path="/cookie-policy" component={CookiePolicy} />
+              <Route path="/analytics" component={AnalyticsDashboard} />
+              <Route path="/booking" component={Booking} />
+              <Route component={NotFound} />
+            </Switch>
+          </main>
+          <Footer />
+        </div>
+      </Route>
+    </Switch>
   );
 }
 

@@ -1,12 +1,23 @@
 import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
-import { insertContactSchema, insertQuoteSchema, insertProjectSchema, insertTestimonialSchema, insertBlogPostSchema } from "@shared/schema";
+import { insertContactSchema, insertQuoteSchema, insertProjectSchema, insertTestimonialSchema, insertBlogPostSchema, insertUserSchema, insertAdminSchema, insertActivityLogSchema, insertSystemSettingSchema, insertNotificationTemplateSchema, insertNotificationSchema } from "@shared/schema";
 import { z } from "zod";
 import { orchestrator } from "./services/microservice-orchestrator";
 import { contentService } from "./services/content-service";
 import { contactService } from "./services/contact-service";
 import { analyticsService } from "./services/analytics-service";
+
+// Admin authentication middleware
+const requireAdmin = (req: any, res: any, next: any) => {
+  // For now, we'll implement basic auth. In production, use proper JWT/session management
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(401).json({ message: "Admin authentication required" });
+  }
+  // TODO: Implement proper admin authentication
+  next();
+};
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Projects API routes
@@ -461,6 +472,368 @@ export async function registerRoutes(app: Express): Promise<Server> {
     } catch (error) {
       console.error("Error fetching microservice metrics:", error);
       res.status(500).json({ message: "Failed to fetch metrics" });
+    }
+  });
+
+  // ADMIN API ROUTES
+
+  // Admin User Management
+  app.get("/api/admin/users", async (req, res) => {
+    try {
+      const users = await storage.getUsers();
+      res.json(users);
+    } catch (error) {
+      console.error("Error fetching users:", error);
+      res.status(500).json({ message: "Failed to fetch users" });
+    }
+  });
+
+  app.get("/api/admin/users/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const user = await storage.getUser(id);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
+  app.put("/api/admin/users/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const partialSchema = insertUserSchema.partial();
+      const validatedData = partialSchema.parse(req.body);
+      
+      const user = await storage.updateUser(id, validatedData);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "update",
+        entity: "users",
+        entityId: id,
+        details: { updatedFields: Object.keys(validatedData) } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.json(user);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error updating user:", error);
+      res.status(500).json({ message: "Failed to update user" });
+    }
+  });
+
+  app.delete("/api/admin/users/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const success = await storage.deleteUser(id);
+      
+      if (!success) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "delete",
+        entity: "users",
+        entityId: id,
+        details: { deletedUser: id } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting user:", error);
+      res.status(500).json({ message: "Failed to delete user" });
+    }
+  });
+
+  // Admin Management
+  app.get("/api/admin/admins", async (req, res) => {
+    try {
+      const admins = await storage.getAdmins();
+      res.json(admins);
+    } catch (error) {
+      console.error("Error fetching admins:", error);
+      res.status(500).json({ message: "Failed to fetch admins" });
+    }
+  });
+
+  app.post("/api/admin/admins", async (req, res) => {
+    try {
+      const validatedData = insertAdminSchema.parse(req.body);
+      const admin = await storage.createAdmin(validatedData);
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "create",
+        entity: "admins",
+        entityId: admin.id,
+        details: { role: validatedData.role, permissions: validatedData.permissions } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.status(201).json(admin);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating admin:", error);
+      res.status(500).json({ message: "Failed to create admin" });
+    }
+  });
+
+  app.put("/api/admin/admins/:id", async (req, res) => {
+    try {
+      const { id } = req.params;
+      const partialSchema = insertAdminSchema.partial();
+      const validatedData = partialSchema.parse(req.body);
+      
+      const admin = await storage.updateAdmin(id, validatedData);
+      
+      if (!admin) {
+        return res.status(404).json({ message: "Admin not found" });
+      }
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "update",
+        entity: "admins",
+        entityId: id,
+        details: { updatedFields: Object.keys(validatedData) } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.json(admin);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error updating admin:", error);
+      res.status(500).json({ message: "Failed to update admin" });
+    }
+  });
+
+  // Activity Logs
+  app.get("/api/admin/activity-logs", async (req, res) => {
+    try {
+      const { adminId, userId } = req.query;
+      
+      let logs;
+      if (adminId && typeof adminId === 'string') {
+        logs = await storage.getActivityLogsByAdmin(adminId);
+      } else if (userId && typeof userId === 'string') {
+        logs = await storage.getActivityLogsByUser(userId);
+      } else {
+        logs = await storage.getActivityLogs();
+      }
+      
+      res.json(logs);
+    } catch (error) {
+      console.error("Error fetching activity logs:", error);
+      res.status(500).json({ message: "Failed to fetch activity logs" });
+    }
+  });
+
+  // System Settings
+  app.get("/api/admin/settings", async (req, res) => {
+    try {
+      const { category } = req.query;
+      
+      let settings;
+      if (category && typeof category === 'string') {
+        settings = await storage.getSystemSettingsByCategory(category);
+      } else {
+        settings = await storage.getSystemSettings();
+      }
+      
+      res.json(settings);
+    } catch (error) {
+      console.error("Error fetching system settings:", error);
+      res.status(500).json({ message: "Failed to fetch system settings" });
+    }
+  });
+
+  app.post("/api/admin/settings", async (req, res) => {
+    try {
+      const validatedData = insertSystemSettingSchema.parse(req.body);
+      const setting = await storage.createSystemSetting(validatedData);
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "create",
+        entity: "system_settings",
+        entityId: setting.id,
+        details: { key: validatedData.key, category: validatedData.category } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.status(201).json(setting);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating system setting:", error);
+      res.status(500).json({ message: "Failed to create system setting" });
+    }
+  });
+
+  // Notification Templates
+  app.get("/api/admin/notification-templates", async (req, res) => {
+    try {
+      const templates = await storage.getNotificationTemplates();
+      res.json(templates);
+    } catch (error) {
+      console.error("Error fetching notification templates:", error);
+      res.status(500).json({ message: "Failed to fetch notification templates" });
+    }
+  });
+
+  app.post("/api/admin/notification-templates", async (req, res) => {
+    try {
+      const validatedData = insertNotificationTemplateSchema.parse(req.body);
+      const template = await storage.createNotificationTemplate(validatedData);
+      
+      res.status(201).json(template);
+    } catch (error) {
+      if (error instanceof z.ZodError) {
+        return res.status(400).json({ 
+          message: "Validation error", 
+          errors: error.errors 
+        });
+      }
+      console.error("Error creating notification template:", error);
+      res.status(500).json({ message: "Failed to create notification template" });
+    }
+  });
+
+  // Send Notifications
+  app.post("/api/admin/notifications/send", async (req, res) => {
+    try {
+      const { userIds, templateId, type, subject, message } = req.body;
+      
+      if (!Array.isArray(userIds) || userIds.length === 0) {
+        return res.status(400).json({ message: "User IDs are required" });
+      }
+      
+      const notifications = [];
+      for (const userId of userIds) {
+        const notification = await storage.createNotification({
+          userId,
+          templateId: templateId || null,
+          type,
+          subject: subject || null,
+          message,
+          status: "sent",
+          sentAt: new Date()
+        });
+        notifications.push(notification);
+      }
+      
+      // Log activity
+      await storage.createActivityLog({
+        action: "send_notification",
+        entity: "notifications",
+        details: { userCount: userIds.length, type, templateId } as any,
+        ipAddress: req.ip,
+        userAgent: req.get('User-Agent') || null
+      });
+      
+      res.json({ 
+        message: `Notifications sent to ${userIds.length} users`,
+        notifications
+      });
+    } catch (error) {
+      console.error("Error sending notifications:", error);
+      res.status(500).json({ message: "Failed to send notifications" });
+    }
+  });
+
+  // Enhanced Analytics for Admin
+  app.get("/api/admin/analytics/overview", async (req, res) => {
+    try {
+      const { timeframe = 'today' } = req.query;
+      
+      // Get comprehensive admin analytics
+      const users = await storage.getUsers();
+      const contacts = await storage.getContacts();
+      const projects = await storage.getProjects();
+      const testimonials = await storage.getTestimonials();
+      const activityLogs = await storage.getActivityLogs();
+      
+      // Calculate metrics based on timeframe
+      const now = new Date();
+      let startDate: Date;
+      
+      switch (timeframe) {
+        case 'week':
+          startDate = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+          break;
+        case 'month':
+          startDate = new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000);
+          break;
+        default:
+          startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      }
+      
+      const metrics = {
+        totalUsers: users.length,
+        activeUsers: users.filter(u => u.status === 'active').length,
+        newUsersInPeriod: users.filter(u => new Date(u.createdAt) >= startDate).length,
+        totalContacts: contacts.length,
+        newContactsInPeriod: contacts.filter(c => new Date(c.createdAt) >= startDate).length,
+        totalProjects: projects.length,
+        featuredProjects: projects.filter(p => p.featured === 1).length,
+        totalTestimonials: testimonials.length,
+        featuredTestimonials: testimonials.filter(t => t.featured === 1).length,
+        recentActivities: activityLogs.filter(log => new Date(log.createdAt) >= startDate).length,
+        userStatusBreakdown: {
+          active: users.filter(u => u.status === 'active').length,
+          blocked: users.filter(u => u.status === 'blocked').length,
+          pending: users.filter(u => u.status === 'pending').length,
+          suspended: users.filter(u => u.status === 'suspended').length,
+        },
+        contactStatusBreakdown: {
+          new: contacts.filter(c => c.status === 'new').length,
+          contacted: contacts.filter(c => c.status === 'contacted').length,
+          qualified: contacts.filter(c => c.status === 'qualified').length,
+          converted: contacts.filter(c => c.status === 'converted').length,
+        }
+      };
+      
+      res.json(metrics);
+    } catch (error) {
+      console.error("Error fetching admin analytics:", error);
+      res.status(500).json({ message: "Failed to fetch admin analytics" });
     }
   });
 

@@ -1,4 +1,4 @@
-import { type User, type InsertUser, type Project, type InsertProject, type Testimonial, type InsertTestimonial, type BlogPost, type InsertBlogPost, type Contact, type InsertContact, type Quote, type InsertQuote } from "@shared/schema";
+import { type User, type InsertUser, type Admin, type InsertAdmin, type ActivityLog, type InsertActivityLog, type SystemSetting, type InsertSystemSetting, type NotificationTemplate, type InsertNotificationTemplate, type Notification, type InsertNotification, type Project, type InsertProject, type Testimonial, type InsertTestimonial, type BlogPost, type InsertBlogPost, type Contact, type InsertContact, type Quote, type InsertQuote } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 // Storage interface with all CRUD methods for different entities
@@ -6,7 +6,46 @@ export interface IStorage {
   // User methods
   getUser(id: string): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
+  getUserByEmail(email: string): Promise<User | undefined>;
+  getUsers(): Promise<User[]>;
   createUser(user: InsertUser): Promise<User>;
+  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
+  deleteUser(id: string): Promise<boolean>;
+
+  // Admin methods
+  getAdmins(): Promise<Admin[]>;
+  getAdmin(id: string): Promise<Admin | undefined>;
+  getAdminByUserId(userId: string): Promise<Admin | undefined>;
+  createAdmin(admin: InsertAdmin): Promise<Admin>;
+  updateAdmin(id: string, admin: Partial<InsertAdmin>): Promise<Admin | undefined>;
+  deleteAdmin(id: string): Promise<boolean>;
+
+  // Activity log methods
+  getActivityLogs(): Promise<ActivityLog[]>;
+  getActivityLogsByAdmin(adminId: string): Promise<ActivityLog[]>;
+  getActivityLogsByUser(userId: string): Promise<ActivityLog[]>;
+  createActivityLog(log: InsertActivityLog): Promise<ActivityLog>;
+
+  // System settings methods
+  getSystemSettings(): Promise<SystemSetting[]>;
+  getSystemSettingsByCategory(category: string): Promise<SystemSetting[]>;
+  getSystemSetting(key: string): Promise<SystemSetting | undefined>;
+  createSystemSetting(setting: InsertSystemSetting): Promise<SystemSetting>;
+  updateSystemSetting(key: string, setting: Partial<InsertSystemSetting>): Promise<SystemSetting | undefined>;
+  deleteSystemSetting(key: string): Promise<boolean>;
+
+  // Notification template methods
+  getNotificationTemplates(): Promise<NotificationTemplate[]>;
+  getNotificationTemplate(id: string): Promise<NotificationTemplate | undefined>;
+  createNotificationTemplate(template: InsertNotificationTemplate): Promise<NotificationTemplate>;
+  updateNotificationTemplate(id: string, template: Partial<InsertNotificationTemplate>): Promise<NotificationTemplate | undefined>;
+  deleteNotificationTemplate(id: string): Promise<boolean>;
+
+  // Notification methods
+  getNotifications(): Promise<Notification[]>;
+  getNotificationsByUser(userId: string): Promise<Notification[]>;
+  createNotification(notification: InsertNotification): Promise<Notification>;
+  updateNotification(id: string, notification: Partial<InsertNotification>): Promise<Notification | undefined>;
 
   // Project methods
   getProjects(): Promise<Project[]>;
@@ -53,6 +92,11 @@ export interface IStorage {
 
 export class MemStorage implements IStorage {
   private users: Map<string, User>;
+  private admins: Map<string, Admin>;
+  private activityLogs: Map<string, ActivityLog>;
+  private systemSettings: Map<string, SystemSetting>;
+  private notificationTemplates: Map<string, NotificationTemplate>;
+  private notifications: Map<string, Notification>;
   private projects: Map<string, Project>;
   private testimonials: Map<string, Testimonial>;
   private blogPosts: Map<string, BlogPost>;
@@ -61,6 +105,11 @@ export class MemStorage implements IStorage {
 
   constructor() {
     this.users = new Map();
+    this.admins = new Map();
+    this.activityLogs = new Map();
+    this.systemSettings = new Map();
+    this.notificationTemplates = new Map();
+    this.notifications = new Map();
     this.projects = new Map();
     this.testimonials = new Map();
     this.blogPosts = new Map();
@@ -164,9 +213,269 @@ export class MemStorage implements IStorage {
 
   async createUser(insertUser: InsertUser): Promise<User> {
     const id = randomUUID();
-    const user: User = { ...insertUser, id };
+    const now = new Date();
+    const user: User = { 
+      ...insertUser, 
+      id,
+      email: insertUser.email || null,
+      firstName: insertUser.firstName || null,
+      lastName: insertUser.lastName || null,
+      status: insertUser.status || "active",
+      verified: insertUser.verified || false,
+      lastLoginAt: null,
+      createdAt: now,
+      updatedAt: now
+    };
     this.users.set(id, user);
     return user;
+  }
+
+  async getUserByEmail(email: string): Promise<User | undefined> {
+    return Array.from(this.users.values()).find(user => user.email === email);
+  }
+
+  async getUsers(): Promise<User[]> {
+    return Array.from(this.users.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
+    const user = this.users.get(id);
+    if (!user) return undefined;
+
+    const updatedUser: User = { 
+      ...user, 
+      ...updateData,
+      updatedAt: new Date()
+    };
+    this.users.set(id, updatedUser);
+    return updatedUser;
+  }
+
+  async deleteUser(id: string): Promise<boolean> {
+    return this.users.delete(id);
+  }
+
+  // Admin methods
+  async getAdmins(): Promise<Admin[]> {
+    return Array.from(this.admins.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getAdmin(id: string): Promise<Admin | undefined> {
+    return this.admins.get(id);
+  }
+
+  async getAdminByUserId(userId: string): Promise<Admin | undefined> {
+    return Array.from(this.admins.values()).find(admin => admin.userId === userId);
+  }
+
+  async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
+    const id = randomUUID();
+    const now = new Date();
+    const admin: Admin = {
+      ...insertAdmin,
+      id,
+      status: insertAdmin.status || "active",
+      permissions: Array.isArray(insertAdmin.permissions) ? insertAdmin.permissions : [],
+      createdAt: now,
+      updatedAt: now
+    };
+    this.admins.set(id, admin);
+    return admin;
+  }
+
+  async updateAdmin(id: string, updateData: Partial<InsertAdmin>): Promise<Admin | undefined> {
+    const admin = this.admins.get(id);
+    if (!admin) return undefined;
+
+    const updatedAdmin: Admin = {
+      ...admin,
+      ...updateData,
+      permissions: Array.isArray(updateData.permissions) ? updateData.permissions : admin.permissions,
+      updatedAt: new Date()
+    };
+    this.admins.set(id, updatedAdmin);
+    return updatedAdmin;
+  }
+
+  async deleteAdmin(id: string): Promise<boolean> {
+    return this.admins.delete(id);
+  }
+
+  // Activity log methods
+  async getActivityLogs(): Promise<ActivityLog[]> {
+    return Array.from(this.activityLogs.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getActivityLogsByAdmin(adminId: string): Promise<ActivityLog[]> {
+    return Array.from(this.activityLogs.values())
+      .filter(log => log.adminId === adminId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async getActivityLogsByUser(userId: string): Promise<ActivityLog[]> {
+    return Array.from(this.activityLogs.values())
+      .filter(log => log.userId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createActivityLog(insertLog: InsertActivityLog): Promise<ActivityLog> {
+    const id = randomUUID();
+    const activityLog: ActivityLog = {
+      ...insertLog,
+      id,
+      adminId: insertLog.adminId || null,
+      userId: insertLog.userId || null,
+      entity: insertLog.entity || null,
+      entityId: insertLog.entityId || null,
+      details: insertLog.details || null,
+      ipAddress: insertLog.ipAddress || null,
+      userAgent: insertLog.userAgent || null,
+      createdAt: new Date()
+    };
+    this.activityLogs.set(id, activityLog);
+    return activityLog;
+  }
+
+  // System settings methods
+  async getSystemSettings(): Promise<SystemSetting[]> {
+    return Array.from(this.systemSettings.values()).sort((a, b) => 
+      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+    );
+  }
+
+  async getSystemSettingsByCategory(category: string): Promise<SystemSetting[]> {
+    return Array.from(this.systemSettings.values())
+      .filter(setting => setting.category === category)
+      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+  }
+
+  async getSystemSetting(key: string): Promise<SystemSetting | undefined> {
+    return Array.from(this.systemSettings.values()).find(setting => setting.key === key);
+  }
+
+  async createSystemSetting(insertSetting: InsertSystemSetting): Promise<SystemSetting> {
+    const id = randomUUID();
+    const now = new Date();
+    const setting: SystemSetting = {
+      ...insertSetting,
+      id,
+      description: insertSetting.description || null,
+      updatedBy: insertSetting.updatedBy || null,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.systemSettings.set(id, setting);
+    return setting;
+  }
+
+  async updateSystemSetting(key: string, updateData: Partial<InsertSystemSetting>): Promise<SystemSetting | undefined> {
+    const setting = Array.from(this.systemSettings.values()).find(s => s.key === key);
+    if (!setting) return undefined;
+
+    const updatedSetting: SystemSetting = {
+      ...setting,
+      ...updateData,
+      updatedAt: new Date()
+    };
+    this.systemSettings.set(setting.id, updatedSetting);
+    return updatedSetting;
+  }
+
+  async deleteSystemSetting(key: string): Promise<boolean> {
+    const setting = Array.from(this.systemSettings.values()).find(s => s.key === key);
+    if (!setting) return false;
+    return this.systemSettings.delete(setting.id);
+  }
+
+  // Notification template methods
+  async getNotificationTemplates(): Promise<NotificationTemplate[]> {
+    return Array.from(this.notificationTemplates.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getNotificationTemplate(id: string): Promise<NotificationTemplate | undefined> {
+    return this.notificationTemplates.get(id);
+  }
+
+  async createNotificationTemplate(insertTemplate: InsertNotificationTemplate): Promise<NotificationTemplate> {
+    const id = randomUUID();
+    const now = new Date();
+    const template: NotificationTemplate = {
+      ...insertTemplate,
+      id,
+      subject: insertTemplate.subject || null,
+      variables: Array.isArray(insertTemplate.variables) ? insertTemplate.variables : null,
+      active: insertTemplate.active ?? true,
+      createdAt: now,
+      updatedAt: now
+    };
+    this.notificationTemplates.set(id, template);
+    return template;
+  }
+
+  async updateNotificationTemplate(id: string, updateData: Partial<InsertNotificationTemplate>): Promise<NotificationTemplate | undefined> {
+    const template = this.notificationTemplates.get(id);
+    if (!template) return undefined;
+
+    const updatedTemplate: NotificationTemplate = {
+      ...template,
+      ...updateData,
+      variables: Array.isArray(updateData.variables) ? updateData.variables : template.variables,
+      updatedAt: new Date()
+    };
+    this.notificationTemplates.set(id, updatedTemplate);
+    return updatedTemplate;
+  }
+
+  async deleteNotificationTemplate(id: string): Promise<boolean> {
+    return this.notificationTemplates.delete(id);
+  }
+
+  // Notification methods
+  async getNotifications(): Promise<Notification[]> {
+    return Array.from(this.notifications.values()).sort((a, b) => 
+      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
+    );
+  }
+
+  async getNotificationsByUser(userId: string): Promise<Notification[]> {
+    return Array.from(this.notifications.values())
+      .filter(notification => notification.userId === userId)
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+  }
+
+  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
+    const id = randomUUID();
+    const notification: Notification = {
+      ...insertNotification,
+      id,
+      templateId: insertNotification.templateId || null,
+      subject: insertNotification.subject || null,
+      status: insertNotification.status || "pending",
+      sentAt: insertNotification.sentAt || null,
+      createdAt: new Date()
+    };
+    this.notifications.set(id, notification);
+    return notification;
+  }
+
+  async updateNotification(id: string, updateData: Partial<InsertNotification>): Promise<Notification | undefined> {
+    const notification = this.notifications.get(id);
+    if (!notification) return undefined;
+
+    const updatedNotification: Notification = {
+      ...notification,
+      ...updateData
+    };
+    this.notifications.set(id, updatedNotification);
+    return updatedNotification;
   }
 
   // Project methods
