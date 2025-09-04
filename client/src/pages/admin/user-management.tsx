@@ -17,6 +17,26 @@ import { User } from "@shared/schema";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+// Utility function for throttling mouse events
+function throttle(func: Function, delay: number) {
+  let timeoutId: NodeJS.Timeout | null = null;
+  let lastExecTime = 0;
+  return function (this: any, ...args: any[]) {
+    const currentTime = Date.now();
+    
+    if (currentTime - lastExecTime > delay) {
+      func.apply(this, args);
+      lastExecTime = currentTime;
+    } else {
+      if (timeoutId) clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        func.apply(this, args);
+        lastExecTime = Date.now();
+      }, delay - (currentTime - lastExecTime));
+    }
+  };
+}
+
 interface UserFormData {
   username: string;
   email: string;
@@ -657,24 +677,4 @@ export default function UserManagement() {
       </div>
     </>
   );
-}
-
-// Utility function for throttling mouse events
-function throttle(func: Function, delay: number) {
-  let timeoutId: NodeJS.Timeout | null = null;
-  let lastExecTime = 0;
-  return function (this: any, ...args: any[]) {
-    const currentTime = Date.now();
-    
-    if (currentTime - lastExecTime > delay) {
-      func.apply(this, args);
-      lastExecTime = currentTime;
-    } else {
-      if (timeoutId) clearTimeout(timeoutId);
-      timeoutId = setTimeout(() => {
-        func.apply(this, args);
-        lastExecTime = Date.now();
-      }, delay - (currentTime - lastExecTime));
-    }
-  };
 }
