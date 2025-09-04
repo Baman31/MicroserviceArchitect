@@ -22,6 +22,9 @@ import About from "@/pages/about";
 import Blog from "@/pages/blog";
 import Contact from "@/pages/contact";
 import ServicesComparison from "@/pages/services-comparison";
+import PrivacyPolicy from "@/pages/privacy-policy";
+import TermsOfService from "@/pages/terms-of-service";
+import CookiePolicy from "@/pages/cookie-policy";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import NotFound from "@/pages/not-found";
 
@@ -45,6 +48,9 @@ function Router() {
           <Route path="/blog" component={Blog} />
           <Route path="/contact" component={Contact} />
           <Route path="/services-comparison" component={ServicesComparison} />
+          <Route path="/privacy-policy" component={PrivacyPolicy} />
+          <Route path="/terms-of-service" component={TermsOfService} />
+          <Route path="/cookie-policy" component={CookiePolicy} />
           <Route path="/analytics" component={AnalyticsDashboard} />
           <Route component={NotFound} />
         </Switch>

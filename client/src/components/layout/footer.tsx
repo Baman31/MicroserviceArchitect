@@ -125,9 +125,9 @@ export default function Footer() {
                   &copy; 2024 TechVantage Solutions. Made with <Heart className="h-4 w-4 text-red-400" /> in Jaipur
                 </p>
                 <div className="flex gap-6 mt-2 justify-center lg:justify-start">
-                  <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">Privacy Policy</a>
-                  <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">Terms of Service</a>
-                  <a href="#" className="text-white/60 hover:text-white text-sm transition-colors">Cookie Policy</a>
+                  <Link href="/privacy-policy" className="text-white/60 hover:text-white text-sm transition-colors" data-testid="footer-privacy-policy">Privacy Policy</Link>
+                  <Link href="/terms-of-service" className="text-white/60 hover:text-white text-sm transition-colors" data-testid="footer-terms-of-service">Terms of Service</Link>
+                  <Link href="/cookie-policy" className="text-white/60 hover:text-white text-sm transition-colors" data-testid="footer-cookie-policy">Cookie Policy</Link>
                 </div>
               </div>
               
