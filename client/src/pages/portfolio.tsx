@@ -50,7 +50,7 @@ export default function Portfolio() {
         </section>
 
         {/* Filter Section */}
-        <section className="py-12 bg-background border-b">
+        <section className="py-12 bg-muted/30 border-b border-border/50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-wrap gap-4 justify-center" data-testid="portfolio-filters">
               {categories.map((category) => (
@@ -58,6 +58,10 @@ export default function Portfolio() {
                   key={category.value}
                   variant={selectedCategory === category.value ? "default" : "outline"}
                   onClick={() => setSelectedCategory(category.value)}
+                  className={selectedCategory === category.value 
+                    ? "bg-primary text-primary-foreground hover:bg-primary/90" 
+                    : "border-border text-foreground hover:bg-muted hover:text-foreground"
+                  }
                   data-testid={`filter-${category.value}`}
                 >
                   {category.label}
