@@ -3,38 +3,38 @@
 @tailwind utilities;
 
 :root {
-  --background: hsl(220, 15%, 6%);
+  --background: hsl(255, 30%, 8%);
   --foreground: hsl(0, 0%, 98%);
-  --card: hsl(220, 13%, 8%);
+  --card: hsl(255, 25%, 12%);
   --card-foreground: hsl(0, 0%, 98%);
-  --popover: hsl(220, 13%, 8%);
+  --popover: hsl(255, 25%, 12%);
   --popover-foreground: hsl(0, 0%, 98%);
-  --primary: hsl(217, 91%, 60%);
+  --primary: hsl(271, 81%, 56%);
   --primary-foreground: hsl(0, 0%, 98%);
-  --secondary: hsl(160, 84%, 39%);
+  --secondary: hsl(315, 70%, 60%);
   --secondary-foreground: hsl(0, 0%, 98%);
-  --muted: hsl(220, 13%, 14%);
-  --muted-foreground: hsl(220, 9%, 71%);
-  --accent: hsl(220, 13%, 14%);
+  --muted: hsl(255, 20%, 18%);
+  --muted-foreground: hsl(255, 15%, 71%);
+  --accent: hsl(255, 20%, 18%);
   --accent-foreground: hsl(0, 0%, 98%);
   --destructive: hsl(0, 84%, 60%);
   --destructive-foreground: hsl(0, 0%, 98%);
-  --border: hsl(220, 13%, 14%);
-  --input: hsl(220, 13%, 14%);
-  --ring: hsl(217, 91%, 60%);
-  --chart-1: hsl(217, 91%, 60%);
-  --chart-2: hsl(160, 84%, 39%);
+  --border: hsl(255, 20%, 18%);
+  --input: hsl(255, 20%, 18%);
+  --ring: hsl(271, 81%, 56%);
+  --chart-1: hsl(271, 81%, 56%);
+  --chart-2: hsl(315, 70%, 60%);
   --chart-3: hsl(45, 93%, 58%);
-  --chart-4: hsl(271, 81%, 56%);
-  --chart-5: hsl(0, 84%, 60%);
-  --sidebar: hsl(220, 15%, 6%);
+  --chart-4: hsl(280, 70%, 65%);
+  --chart-5: hsl(320, 75%, 55%);
+  --sidebar: hsl(255, 30%, 8%);
   --sidebar-foreground: hsl(0, 0%, 98%);
-  --sidebar-primary: hsl(217, 91%, 60%);
+  --sidebar-primary: hsl(271, 81%, 56%);
   --sidebar-primary-foreground: hsl(0, 0%, 98%);
-  --sidebar-accent: hsl(220, 13%, 14%);
+  --sidebar-accent: hsl(255, 20%, 18%);
   --sidebar-accent-foreground: hsl(0, 0%, 98%);
-  --sidebar-border: hsl(220, 13%, 14%);
-  --sidebar-ring: hsl(217, 91%, 60%);
+  --sidebar-border: hsl(255, 20%, 18%);
+  --sidebar-ring: hsl(271, 81%, 56%);
   --font-sans: 'Inter', sans-serif;
   --font-serif: Georgia, serif;
   --font-mono: 'Fira Code', monospace;
@@ -51,9 +51,11 @@
   --shadow-2xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   --tracking-normal: 0em;
   --spacing: 0.25rem;
-  --gradient-primary: linear-gradient(135deg, hsl(217, 91%, 60%) 0%, hsl(160, 84%, 39%) 100%);
-  --gradient-accent: linear-gradient(135deg, hsl(271, 81%, 56%) 0%, hsl(217, 91%, 60%) 100%);
-  --gradient-bg: linear-gradient(135deg, hsl(220, 15%, 6%) 0%, hsl(220, 13%, 10%) 100%);
+  --gradient-primary: linear-gradient(135deg, hsl(271, 81%, 56%) 0%, hsl(315, 70%, 60%) 100%);
+  --gradient-accent: linear-gradient(135deg, hsl(280, 70%, 65%) 0%, hsl(320, 75%, 55%) 100%);
+  --gradient-bg: linear-gradient(135deg, hsl(255, 30%, 8%) 0%, hsl(255, 25%, 15%) 100%);
+  --gradient-purple-dark: linear-gradient(135deg, hsl(255, 40%, 12%) 0%, hsl(270, 50%, 20%) 50%, hsl(285, 60%, 25%) 100%);
+  --gradient-space: radial-gradient(ellipse at center, hsl(271, 81%, 56%, 0.3) 0%, transparent 70%);
 }
 
 
