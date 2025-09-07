@@ -68,7 +68,7 @@ export default function About() {
 
       <div data-testid="about-page">
         {/* Hero Section */}
-        <section className="py-20 bg-primary text-white">
+        <section className="space-theme py-20 text-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl lg:text-6xl font-bold font-poppins mb-6" data-testid="about-title">
@@ -115,7 +115,7 @@ export default function About() {
         </section>
 
         {/* Values Section */}
-        <section className="py-20 bg-muted">
+        <section className="py-20 bg-muted/50 relative">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="values-title">
@@ -188,7 +188,7 @@ export default function About() {
         </section>
 
         {/* Timeline Section */}
-        <section className="py-20 bg-muted">
+        <section className="py-20 bg-muted/50 relative">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center mb-16">
               <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="timeline-title">
@@ -258,7 +258,7 @@ export default function About() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-primary text-white">
+        <section className="space-theme py-20 text-white relative overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="cta-title">
               Ready to Work With Us?
