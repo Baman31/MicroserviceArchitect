@@ -277,7 +277,7 @@ export default function CloudSolutions() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-primary text-white">
+        <section className="space-theme py-20 text-white relative overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="cta-title">
               Ready to Move to the Cloud?
