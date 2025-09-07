@@ -183,7 +183,7 @@ export default function SeoMarketing() {
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-3" data-testid={`feature-${index}`}>
                   <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>{feature}</span>
+                  <span className="text-foreground">{feature}</span>
                 </div>
               ))}
             </div>
@@ -230,7 +230,7 @@ export default function SeoMarketing() {
         </section>
 
         {/* CTA Section */}
-        <section className="py-20 bg-primary text-white">
+        <section className="space-theme py-20 text-white relative overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="cta-title">
               Ready to Boost Your Online Presence?

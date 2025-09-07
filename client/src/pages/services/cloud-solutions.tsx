@@ -157,7 +157,7 @@ export default function CloudSolutions() {
               {features.map((feature, index) => (
                 <div key={index} className="flex items-center space-x-3" data-testid={`feature-${index}`}>
                   <Check className="h-5 w-5 text-green-500 flex-shrink-0" />
-                  <span>{feature}</span>
+                  <span className="text-foreground">{feature}</span>
                 </div>
               ))}
             </div>
