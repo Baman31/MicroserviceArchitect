@@ -20,7 +20,7 @@ export default function ProjectCard({
   testId 
 }: ProjectCardProps) {
   return (
-    <div className="bg-muted rounded-lg overflow-hidden shadow-md hover:shadow-xl transition-shadow border border-border" data-testid={testId}>
+    <div className="modern-card bg-card rounded-2xl overflow-hidden shadow-lg hover:shadow-glow-secondary hover-lift transition-all duration-300 border border-border" data-testid={testId}>
       <img 
         src={imageUrl} 
         alt={`${title} screenshot`} 

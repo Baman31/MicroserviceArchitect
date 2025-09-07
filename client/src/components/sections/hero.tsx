@@ -60,10 +60,10 @@ export default function Hero() {
   return (
     <section 
       ref={heroRef}
-      className="hero-gradient text-white py-32 lg:py-48 relative overflow-hidden"
+      className="space-theme text-white py-32 lg:py-48 relative overflow-hidden"
       data-testid="hero-section"
       style={{
-        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, rgba(255,255,255,0.1) 0%, transparent 50%), var(--gradient-primary)`,
+        background: `radial-gradient(circle at ${mousePosition.x}% ${mousePosition.y}%, hsl(271, 81%, 56%, 0.2) 0%, transparent 50%), var(--gradient-purple-dark)`,
       }}
     >
       {/* Animated Background Elements with Particle System */}

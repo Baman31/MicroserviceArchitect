@@ -12,21 +12,21 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ icon: Icon, title, description, href, testId, index = 0 }: ServiceCardProps) {
   const gradientColors = [
-    'from-purple-500/20 to-pink-500/20',
-    'from-blue-500/20 to-cyan-500/20',
-    'from-green-500/20 to-teal-500/20',
-    'from-orange-500/20 to-red-500/20',
-    'from-indigo-500/20 to-purple-500/20',
-    'from-pink-500/20 to-rose-500/20'
+    'from-purple-500/30 to-pink-500/30',
+    'from-purple-600/25 to-purple-400/25',
+    'from-pink-500/30 to-purple-500/30',
+    'from-purple-400/25 to-indigo-500/25',
+    'from-indigo-500/30 to-purple-500/30',
+    'from-pink-600/25 to-purple-600/25'
   ];
 
   const iconColors = [
+    'text-purple-300',
+    'text-pink-300',
     'text-purple-400',
-    'text-blue-400',
-    'text-green-400',
-    'text-orange-400',
-    'text-indigo-400',
-    'text-pink-400'
+    'text-indigo-300',
+    'text-pink-400',
+    'text-purple-200'
   ];
 
   return (

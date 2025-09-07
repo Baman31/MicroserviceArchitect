@@ -20,7 +20,7 @@ export default function TestimonialCard({
   testId 
 }: TestimonialCardProps) {
   return (
-    <div className="bg-card p-6 rounded-lg shadow-md border border-border" data-testid={testId}>
+    <div className="modern-card bg-card p-6 rounded-2xl shadow-lg border border-border hover-lift" data-testid={testId}>
       <div className="flex items-center mb-4" data-testid={`${testId}-rating`}>
         <div className="flex text-secondary">
           {[...Array(5)].map((_, i) => (
