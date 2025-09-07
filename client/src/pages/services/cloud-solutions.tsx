@@ -101,7 +101,7 @@ export default function CloudSolutions() {
 
       <div data-testid="cloud-solutions-page">
         {/* Hero Section */}
-        <section className="py-20 bg-primary text-white">
+        <section className="space-theme py-20 text-white relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
               <h1 className="text-4xl lg:text-6xl font-bold font-poppins mb-6" data-testid="service-title">

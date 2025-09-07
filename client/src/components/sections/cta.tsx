@@ -13,7 +13,7 @@ export default function CTA() {
   };
 
   return (
-    <section className="py-24 lg:py-32 gradient-primary text-white relative overflow-hidden" data-testid="cta-section">
+    <section className="space-theme py-24 lg:py-32 text-white relative overflow-hidden" data-testid="cta-section">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float"></div>
