@@ -13,6 +13,10 @@ export default {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+        "purple-dark": "hsl(255, 30%, 8%)",
+        "purple-medium": "hsl(255, 25%, 15%)",
+        "purple-light": "hsl(271, 81%, 56%)",
+        "pink-accent": "hsl(315, 70%, 60%)",
         card: {
           DEFAULT: "var(--card)",
           foreground: "var(--card-foreground)",

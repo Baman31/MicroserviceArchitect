@@ -66,7 +66,7 @@
 
   body {
     @apply font-sans antialiased;
-    background: var(--gradient-bg);
+    background: var(--gradient-purple-dark);
     color: hsl(var(--foreground));
     min-height: 100vh;
   }
@@ -144,6 +144,27 @@
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
+  }
+  
+  .gradient-purple-dark {
+    background: var(--gradient-purple-dark);
+  }
+  
+  .gradient-space {
+    background: var(--gradient-space);
+  }
+  
+  .space-theme {
+    background: var(--gradient-purple-dark);
+    position: relative;
+  }
+  
+  .space-theme::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-space);
+    opacity: 0.6;
   }
 }
 
