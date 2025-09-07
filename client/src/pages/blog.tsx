@@ -64,7 +64,7 @@ export default function Blog() {
 
       <div data-testid="blog-page">
         {/* Hero Section */}
-        <section className="relative py-24 bg-gradient-to-br from-primary via-primary/90 to-primary/80 text-white overflow-hidden">
+        <section className="space-theme relative py-24 text-white overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <div className="w-full h-full bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.1),transparent_70%)]"></div>
           </div>
@@ -407,7 +407,7 @@ export default function Blog() {
         </section>
 
         {/* Newsletter Signup */}
-        <section className="relative py-24 bg-gradient-to-br from-primary via-primary/95 to-primary/90 text-white overflow-hidden">
+        <section className="space-theme relative py-24 text-white overflow-hidden">
           <div className="absolute inset-0 opacity-20">
             <div className="w-full h-full bg-[radial-gradient(circle_at_70%_60%,rgba(255,255,255,0.1),transparent_70%)]"></div>
           </div>
