@@ -36,13 +36,13 @@ export default function Portfolio() {
 
       <div data-testid="portfolio-page">
         {/* Hero Section */}
-        <section className="space-theme py-20 text-white relative overflow-hidden">
+        <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="text-4xl lg:text-6xl font-bold font-poppins mb-6" data-testid="portfolio-title">
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-foreground" data-testid="portfolio-title">
                 Our Portfolio
               </h1>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8" data-testid="portfolio-description">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8" data-testid="portfolio-description">
                 Explore our successful projects and see how we've helped businesses across Rajasthan achieve their digital transformation goals.
               </p>
             </div>
@@ -159,19 +159,19 @@ export default function Portfolio() {
         </section>
 
         {/* CTA Section */}
-        <section className="space-theme py-20 text-white relative overflow-hidden">
+        <section className="bg-gradient-to-br from-blue-50 to-primary/5 py-20 relative overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="cta-title">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-foreground" data-testid="cta-title">
               Ready to Start Your Project?
             </h2>
-            <p className="text-xl text-blue-100 mb-8" data-testid="cta-description">
+            <p className="text-xl text-muted-foreground mb-8" data-testid="cta-description">
               Let's discuss your project requirements and create something amazing together
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90" data-testid="button-start-project">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" data-testid="button-start-project">
                 <a href="/contact">Start Your Project</a>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary" data-testid="button-view-services">
+              <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" data-testid="button-view-services">
                 <a href="/#services">View Our Services</a>
               </Button>
             </div>
