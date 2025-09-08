@@ -13,28 +13,28 @@ export default function CTA() {
   };
 
   return (
-    <section className="space-theme py-24 lg:py-32 text-white relative overflow-hidden" data-testid="cta-section">
+    <section className="bg-gradient-to-br from-blue-50 to-primary/5 py-24 lg:py-32 relative overflow-hidden" data-testid="cta-section">
       {/* Animated Background Elements */}
       <div className="absolute inset-0">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-white/5 rounded-full blur-3xl animate-float"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-secondary/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }}></div>
-        <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-white/10 rounded-full blur-2xl animate-float" style={{ animationDelay: '-1s' }}></div>
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/5 rounded-full blur-3xl animate-float"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-400/10 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }}></div>
+        <div className="absolute top-1/2 left-1/2 w-32 h-32 bg-primary/10 rounded-full blur-2xl animate-float" style={{ animationDelay: '-1s' }}></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         {/* Section Badge */}
-        <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8 animate-glow-pulse">
-          <Rocket className="h-5 w-5 text-secondary" />
+        <div className="glassmorphism px-6 py-3 rounded-full inline-flex items-center space-x-2 mb-8">
+          <Rocket className="h-5 w-5 text-primary" />
           <span className="text-sm font-medium text-foreground">Ready to Get Started?</span>
         </div>
 
-        <h2 className="text-4xl lg:text-6xl font-bold font-poppins mb-8 leading-tight animate-fade-in-up" data-testid="cta-title">
+        <h2 className="text-4xl lg:text-6xl font-bold mb-8 leading-tight animate-fade-in-up text-foreground" data-testid="cta-title">
           Ready to Transform Your 
           <br />
-          <span className="text-gradient-accent">Digital Presence?</span>
+          <span className="text-gradient">Digital Presence?</span>
         </h2>
 
-        <p className="text-xl lg:text-2xl text-blue-100 mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }} data-testid="cta-description">
+        <p className="text-xl lg:text-2xl text-muted-foreground mb-12 max-w-4xl mx-auto leading-relaxed animate-fade-in-up" style={{ animationDelay: '0.2s' }} data-testid="cta-description">
           Join the growing number of successful businesses in Rajasthan who trust TechVantage Solutions for their digital transformation journey. Let's build something extraordinary together.
         </p>
 
@@ -42,7 +42,7 @@ export default function CTA() {
           <Button 
             asChild 
             size="lg" 
-            className="modern-button group px-8 py-4 text-lg font-semibold shadow-2xl hover:shadow-glow-secondary transition-all duration-500"
+            className="bg-primary hover:bg-primary/90 text-primary-foreground group px-8 py-4 text-lg font-semibold shadow-lg hover:shadow-glow transition-all duration-500"
             onClick={handleGetConsultation}
             data-testid="button-get-consultation"
           >
@@ -56,7 +56,7 @@ export default function CTA() {
             asChild
             variant="outline" 
             size="lg" 
-            className="glassmorphism border-2 border-white/30 hover:border-white hover:bg-white/10 text-white px-8 py-4 text-lg font-semibold hover:shadow-glow transition-all duration-500"
+            className="border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground px-8 py-4 text-lg font-semibold hover:shadow-glow transition-all duration-500"
             onClick={handleCallNow}
             data-testid="button-call-now"
           >
@@ -72,10 +72,10 @@ export default function CTA() {
           <div className="glassmorphism p-6 rounded-2xl hover:shadow-glow transition-all duration-300 group" data-testid="cta-office">
             <div className="flex items-center space-x-4">
               <div className="glassmorphism w-12 h-12 rounded-xl flex items-center justify-center group-hover:shadow-glow transition-all duration-300">
-                <MapPin className="h-6 w-6 text-secondary" />
+                <MapPin className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left">
-                <div className="text-sm text-blue-200 mb-1 text-foreground/80">Office Location</div>
+                <div className="text-sm text-muted-foreground mb-1">Office Location</div>
                 <div className="font-semibold text-foreground">Malviya Nagar, Jaipur, Rajasthan</div>
               </div>
             </div>
@@ -84,10 +84,10 @@ export default function CTA() {
           <div className="glassmorphism p-6 rounded-2xl hover:shadow-glow transition-all duration-300 group" data-testid="cta-email">
             <div className="flex items-center space-x-4">
               <div className="glassmorphism w-12 h-12 rounded-xl flex items-center justify-center group-hover:shadow-glow transition-all duration-300">
-                <Mail className="h-6 w-6 text-secondary" />
+                <Mail className="h-6 w-6 text-primary" />
               </div>
               <div className="text-left">
-                <div className="text-sm text-blue-200 mb-1 text-foreground/80">Email Us</div>
+                <div className="text-sm text-muted-foreground mb-1">Email Us</div>
                 <div className="font-semibold text-foreground">hello@techvantagesolutions.com</div>
               </div>
             </div>
