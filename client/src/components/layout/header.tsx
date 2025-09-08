@@ -50,12 +50,12 @@ export default function Header() {
         <div className="flex justify-between items-center h-20">
           <div className="flex items-center">
             <Link href="/" className="flex items-center group" data-testid="logo-link">
-              <div className="p-3 rounded-xl gradient-primary mr-3 group-hover:shadow-glow group-hover:scale-110 transition-all duration-300 animate-glow-pulse">
-                <Zap className="h-8 w-8 text-white drop-shadow-lg" />
+              <div className="p-3 rounded-xl bg-primary mr-3 group-hover:shadow-glow group-hover:scale-110 transition-all duration-300">
+                <Zap className="h-8 w-8 text-primary-foreground" />
               </div>
               <div>
-                <span className="text-3xl font-black font-poppins text-gradient drop-shadow-lg tracking-tight">TechVantage</span>
-                <span className="text-base font-bold text-muted-foreground ml-2 block -mt-1 drop-shadow-sm">Solutions</span>
+                <span className="text-3xl font-black text-gradient tracking-tight">TechVantage</span>
+                <span className="text-base font-bold text-muted-foreground ml-2 block -mt-1">Solutions</span>
               </div>
             </Link>
           </div>
@@ -150,7 +150,7 @@ export default function Header() {
           <div className="hidden lg:flex items-center space-x-4">
             <Button 
               asChild 
-              className="modern-button px-6 py-2 rounded-xl font-bold shadow-lg hover:shadow-glow-secondary hover-lift transition-all duration-300"
+              className="bg-primary hover:bg-primary/90 text-primary-foreground px-6 py-2 rounded-xl font-bold shadow-lg hover:shadow-glow transition-all duration-300"
               data-testid="button-get-quote"
             >
               <Link href="/contact">Get Quote</Link>
