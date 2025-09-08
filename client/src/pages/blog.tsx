@@ -64,9 +64,9 @@ export default function Blog() {
 
       <div data-testid="blog-page">
         {/* Hero Section */}
-        <section className="space-theme relative py-24 text-white overflow-hidden">
+        <section className="bg-gradient-to-br from-slate-50 to-blue-50 relative py-24 overflow-hidden">
           <div className="absolute inset-0 opacity-20">
-            <div className="w-full h-full bg-[radial-gradient(circle_at_30%_40%,rgba(255,255,255,0.1),transparent_70%)]"></div>
+            <div className="w-full h-full bg-[radial-gradient(circle_at_30%_40%,rgba(59,130,246,0.1),transparent_70%)]"></div>
           </div>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
             <motion.div 
@@ -75,14 +75,14 @@ export default function Blog() {
               transition={{ duration: 0.6 }}
               className="text-center"
             >
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-                <BookOpen className="h-4 w-4" />
-                <span className="text-sm font-medium">Knowledge Hub</span>
+              <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+                <BookOpen className="h-4 w-4 text-primary" />
+                <span className="text-sm font-medium text-foreground">Knowledge Hub</span>
               </div>
-              <h1 className="text-5xl lg:text-7xl font-bold font-poppins mb-6 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent" data-testid="blog-title">
+              <h1 className="text-5xl lg:text-7xl font-bold mb-6 text-gradient" data-testid="blog-title">
                 Insights & Articles
               </h1>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-12" data-testid="blog-description">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-12" data-testid="blog-description">
                 Discover the latest trends, expert insights, and practical guides to help you stay ahead in the digital landscape.
               </p>
               
@@ -407,9 +407,9 @@ export default function Blog() {
         </section>
 
         {/* Newsletter Signup */}
-        <section className="space-theme relative py-24 text-white overflow-hidden">
+        <section className="bg-gradient-to-br from-blue-50 to-primary/5 relative py-24 overflow-hidden">
           <div className="absolute inset-0 opacity-20">
-            <div className="w-full h-full bg-[radial-gradient(circle_at_70%_60%,rgba(255,255,255,0.1),transparent_70%)]"></div>
+            <div className="w-full h-full bg-[radial-gradient(circle_at_70%_60%,rgba(59,130,246,0.1),transparent_70%)]"></div>
           </div>
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
@@ -418,14 +418,14 @@ export default function Blog() {
             viewport={{ once: true }}
             className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative"
           >
-            <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
-              <BookOpen className="h-4 w-4" />
-              <span className="text-sm font-medium">Stay Informed</span>
+            <div className="inline-flex items-center gap-2 bg-primary/10 backdrop-blur-sm rounded-full px-4 py-2 mb-6">
+              <BookOpen className="h-4 w-4 text-primary" />
+              <span className="text-sm font-medium text-foreground">Stay Informed</span>
             </div>
-            <h2 className="text-4xl lg:text-5xl font-bold font-poppins mb-6" data-testid="newsletter-title">
+            <h2 className="text-4xl lg:text-5xl font-bold mb-6 text-foreground" data-testid="newsletter-title">
               Never Miss an Update
             </h2>
-            <p className="text-xl text-blue-100 mb-12 leading-relaxed" data-testid="newsletter-description">
+            <p className="text-xl text-muted-foreground mb-12 leading-relaxed" data-testid="newsletter-description">
               Get the latest insights, tutorials, and industry news delivered straight to your inbox. Join our community of tech enthusiasts.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center max-w-lg mx-auto">
@@ -437,14 +437,14 @@ export default function Blog() {
               />
               <Button 
                 size="lg"
-                className="bg-secondary hover:bg-secondary/90 text-white font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-8 py-4 rounded-xl shadow-lg hover:shadow-xl transition-all whitespace-nowrap"
                 data-testid="newsletter-subscribe-button"
               >
                 Subscribe Now
                 <ArrowRight className="h-4 w-4 ml-2" />
               </Button>
             </div>
-            <p className="text-sm text-blue-100/80 mt-4">
+            <p className="text-sm text-muted-foreground mt-4">
               Join 500+ subscribers • No spam, unsubscribe anytime
             </p>
           </motion.div>
