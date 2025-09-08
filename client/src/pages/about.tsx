@@ -68,13 +68,13 @@ export default function About() {
 
       <div data-testid="about-page">
         {/* Hero Section */}
-        <section className="space-theme py-20 text-white relative overflow-hidden">
+        <section className="bg-gradient-to-br from-slate-50 to-blue-50 py-20 relative overflow-hidden">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="text-center">
-              <h1 className="text-4xl lg:text-6xl font-bold font-poppins mb-6" data-testid="about-title">
+              <h1 className="text-4xl lg:text-6xl font-bold mb-6 text-foreground" data-testid="about-title">
                 About TechVantage Solutions
               </h1>
-              <p className="text-xl text-blue-100 max-w-3xl mx-auto mb-8" data-testid="about-description">
+              <p className="text-xl text-muted-foreground max-w-3xl mx-auto mb-8" data-testid="about-description">
                 Your trusted digital engineering partner, committed to empowering businesses across Rajasthan with innovative IT solutions that drive growth and success.
               </p>
             </div>
@@ -258,19 +258,19 @@ export default function About() {
         </section>
 
         {/* CTA Section */}
-        <section className="space-theme py-20 text-white relative overflow-hidden">
+        <section className="bg-gradient-to-br from-blue-50 to-primary/5 py-20 relative overflow-hidden">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <h2 className="text-3xl lg:text-4xl font-bold font-poppins mb-6" data-testid="cta-title">
+            <h2 className="text-3xl lg:text-4xl font-bold mb-6 text-foreground" data-testid="cta-title">
               Ready to Work With Us?
             </h2>
-            <p className="text-xl text-blue-100 mb-8" data-testid="cta-description">
+            <p className="text-xl text-muted-foreground mb-8" data-testid="cta-description">
               Let's discuss how we can help transform your business with innovative technology solutions
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button asChild size="lg" className="bg-secondary hover:bg-secondary/90" data-testid="button-get-in-touch">
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground" data-testid="button-get-in-touch">
                 <Link href="/contact">Get In Touch</Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary" data-testid="button-view-services">
+              <Button asChild variant="outline" size="lg" className="border-primary text-primary hover:bg-primary hover:text-primary-foreground" data-testid="button-view-services">
                 <Link href="/#services">View Our Services</Link>
               </Button>
             </div>
