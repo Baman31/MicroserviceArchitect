@@ -1,52 +1,8 @@
-import { type User, type InsertUser, type Admin, type InsertAdmin, type ActivityLog, type InsertActivityLog, type SystemSetting, type InsertSystemSetting, type NotificationTemplate, type InsertNotificationTemplate, type Notification, type InsertNotification, type Project, type InsertProject, type Testimonial, type InsertTestimonial, type BlogPost, type InsertBlogPost, type Contact, type InsertContact, type Quote, type InsertQuote } from "@shared/schema";
+import { type Project, type InsertProject, type Testimonial, type InsertTestimonial, type BlogPost, type InsertBlogPost, type Contact, type InsertContact, type Quote, type InsertQuote } from "@shared/schema";
 import { randomUUID } from "crypto";
 
 // Storage interface with all CRUD methods for different entities
 export interface IStorage {
-  // User methods
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  getUserByEmail(email: string): Promise<User | undefined>;
-  getUsers(): Promise<User[]>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: string, user: Partial<InsertUser>): Promise<User | undefined>;
-  deleteUser(id: string): Promise<boolean>;
-
-  // Admin methods
-  getAdmins(): Promise<Admin[]>;
-  getAdmin(id: string): Promise<Admin | undefined>;
-  getAdminByUserId(userId: string): Promise<Admin | undefined>;
-  createAdmin(admin: InsertAdmin): Promise<Admin>;
-  updateAdmin(id: string, admin: Partial<InsertAdmin>): Promise<Admin | undefined>;
-  deleteAdmin(id: string): Promise<boolean>;
-
-  // Activity log methods
-  getActivityLogs(): Promise<ActivityLog[]>;
-  getActivityLogsByAdmin(adminId: string): Promise<ActivityLog[]>;
-  getActivityLogsByUser(userId: string): Promise<ActivityLog[]>;
-  createActivityLog(log: InsertActivityLog): Promise<ActivityLog>;
-
-  // System settings methods
-  getSystemSettings(): Promise<SystemSetting[]>;
-  getSystemSettingsByCategory(category: string): Promise<SystemSetting[]>;
-  getSystemSetting(key: string): Promise<SystemSetting | undefined>;
-  createSystemSetting(setting: InsertSystemSetting): Promise<SystemSetting>;
-  updateSystemSetting(key: string, setting: Partial<InsertSystemSetting>): Promise<SystemSetting | undefined>;
-  deleteSystemSetting(key: string): Promise<boolean>;
-
-  // Notification template methods
-  getNotificationTemplates(): Promise<NotificationTemplate[]>;
-  getNotificationTemplate(id: string): Promise<NotificationTemplate | undefined>;
-  createNotificationTemplate(template: InsertNotificationTemplate): Promise<NotificationTemplate>;
-  updateNotificationTemplate(id: string, template: Partial<InsertNotificationTemplate>): Promise<NotificationTemplate | undefined>;
-  deleteNotificationTemplate(id: string): Promise<boolean>;
-
-  // Notification methods
-  getNotifications(): Promise<Notification[]>;
-  getNotificationsByUser(userId: string): Promise<Notification[]>;
-  createNotification(notification: InsertNotification): Promise<Notification>;
-  updateNotification(id: string, notification: Partial<InsertNotification>): Promise<Notification | undefined>;
-
   // Project methods
   getProjects(): Promise<Project[]>;
   getFeaturedProjects(): Promise<Project[]>;
@@ -90,635 +46,293 @@ export interface IStorage {
   deleteQuote(id: string): Promise<boolean>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-  private admins: Map<string, Admin>;
-  private activityLogs: Map<string, ActivityLog>;
-  private systemSettings: Map<string, SystemSetting>;
-  private notificationTemplates: Map<string, NotificationTemplate>;
-  private notifications: Map<string, Notification>;
-  private projects: Map<string, Project>;
-  private testimonials: Map<string, Testimonial>;
-  private blogPosts: Map<string, BlogPost>;
-  private contacts: Map<string, Contact>;
-  private quotes: Map<string, Quote>;
+// In-memory storage implementation
+class MemStorage implements IStorage {
+  private projects: Project[] = [
+    {
+      id: "67972aef-7460-4ceb-9937-fa5e16b2d5e3",
+      title: "E-Commerce Platform",
+      description: "Complete online shopping solution with payment integration and inventory management.",
+      imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+      technologies: ["React", "Node.js", "MongoDB"],
+      category: "web-apps",
+      caseStudyUrl: "#",
+      featured: 1,
+      createdAt: new Date(),
+    },
+    {
+      id: "ab4d2f1e-8c93-4567-b890-1234567890ef",
+      title: "Corporate Website",
+      description: "Professional corporate presence with content management and SEO optimization.",
+      imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+      technologies: ["Next.js", "Tailwind", "Strapi"],
+      category: "web-dev",
+      caseStudyUrl: "#",
+      featured: 1,
+      createdAt: new Date(),
+    },
+    {
+      id: "cd5e3f2g-9d04-5678-c901-234567890123",
+      title: "Cloud Migration",
+      description: "Complete infrastructure migration to AWS with monitoring and automation.",
+      imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
+      technologies: ["AWS", "Docker", "Kubernetes"],
+      category: "cloud",
+      caseStudyUrl: "#",
+      featured: 1,
+      createdAt: new Date(),
+    },
+  ];
 
-  constructor() {
-    this.users = new Map();
-    this.admins = new Map();
-    this.activityLogs = new Map();
-    this.systemSettings = new Map();
-    this.notificationTemplates = new Map();
-    this.notifications = new Map();
-    this.projects = new Map();
-    this.testimonials = new Map();
-    this.blogPosts = new Map();
-    this.contacts = new Map();
-    this.quotes = new Map();
+  private testimonials: Testimonial[] = [
+    {
+      id: "5eb06077-5155-45fd-881b-5c3f2e8d6b4a",
+      name: "Rajesh Sharma",
+      position: "CEO",
+      company: "Jaipur Textiles",
+      content: "TechVantage transformed our online presence completely. Their web development team created a stunning, fast website that has significantly increased our customer inquiries.",
+      rating: 5,
+      avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      featured: 1,
+      createdAt: new Date(),
+    },
+    {
+      id: "7f8g9h0i-1j2k-3l4m-5n6o-789012345abc",
+      name: "Priya Gupta",
+      position: "CTO",
+      company: "Rajasthan Fintech",
+      content: "The cloud migration project was executed flawlessly. Our systems are now more efficient and secure, and the ongoing support has been exceptional.",
+      rating: 5,
+      avatarUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      featured: 1,
+      createdAt: new Date(),
+    },
+    {
+      id: "9p0q1r2s-3t4u-5v6w-7x8y-901234567def",
+      name: "Amit Jain",
+      position: "Founder",
+      company: "Pink City Tours",
+      content: "Their SEO services doubled our organic traffic within six months. The team is knowledgeable, professional, and delivers results.",
+      rating: 5,
+      avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
+      featured: 1,
+      createdAt: new Date(),
+    },
+  ];
 
-    // Initialize with sample data for demonstration
-    this.initializeSampleData();
-  }
-
-  private initializeSampleData() {
-    // Sample featured projects
-    const sampleProjects: Project[] = [
-      {
-        id: randomUUID(),
-        title: "E-Commerce Platform",
-        description: "Complete online shopping solution with payment integration and inventory management.",
-        imageUrl: "https://images.unsplash.com/photo-1563013544-824ae1b704d3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-        technologies: ["React", "Node.js", "MongoDB"],
-        category: "web-apps",
-        caseStudyUrl: "#",
-        featured: 1,
-        createdAt: new Date()
-      },
-      {
-        id: randomUUID(),
-        title: "Corporate Website",
-        description: "Professional corporate presence with content management and SEO optimization.",
-        imageUrl: "https://images.unsplash.com/photo-1551650975-87deedd944c3?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-        technologies: ["Next.js", "Tailwind", "Strapi"],
-        category: "web-dev",
-        caseStudyUrl: "#",
-        featured: 1,
-        createdAt: new Date()
-      },
-      {
-        id: randomUUID(),
-        title: "Cloud Migration",
-        description: "Complete infrastructure migration to AWS with monitoring and automation.",
-        imageUrl: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&h=400",
-        technologies: ["AWS", "Docker", "Kubernetes"],
-        category: "cloud",
-        caseStudyUrl: "#",
-        featured: 1,
-        createdAt: new Date()
-      }
-    ];
-
-    // Sample testimonials
-    const sampleTestimonials: Testimonial[] = [
-      {
-        id: randomUUID(),
-        name: "Rajesh Sharma",
-        position: "CEO",
-        company: "Jaipur Textiles",
-        content: "TechVantage transformed our online presence completely. Their web development team created a stunning, fast website that has significantly increased our customer inquiries.",
-        rating: 5,
-        avatarUrl: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
-        featured: 1,
-        createdAt: new Date()
-      },
-      {
-        id: randomUUID(),
-        name: "Priya Gupta",
-        position: "CTO",
-        company: "Rajasthan Fintech",
-        content: "The cloud migration project was executed flawlessly. Our systems are now more efficient and secure, and the ongoing support has been exceptional.",
-        rating: 5,
-        avatarUrl: "https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
-        featured: 1,
-        createdAt: new Date()
-      },
-      {
-        id: randomUUID(),
-        name: "Amit Jain",
-        position: "Founder",
-        company: "Pink City Tours",
-        content: "Their SEO services doubled our organic traffic within six months. The team is knowledgeable, professional, and delivers results.",
-        rating: 5,
-        avatarUrl: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&auto=format&fit=crop&w=100&h=100",
-        featured: 1,
-        createdAt: new Date()
-      }
-    ];
-
-    // Store sample data
-    sampleProjects.forEach(project => this.projects.set(project.id, project));
-    sampleTestimonials.forEach(testimonial => this.testimonials.set(testimonial.id, testimonial));
-  }
-
-  // User methods
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
-  }
-
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const now = new Date();
-    const user: User = { 
-      ...insertUser, 
-      id,
-      email: insertUser.email || null,
-      firstName: insertUser.firstName || null,
-      lastName: insertUser.lastName || null,
-      status: insertUser.status || "active",
-      verified: insertUser.verified || false,
-      lastLoginAt: null,
-      createdAt: now,
-      updatedAt: now
-    };
-    this.users.set(id, user);
-    return user;
-  }
-
-  async getUserByEmail(email: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(user => user.email === email);
-  }
-
-  async getUsers(): Promise<User[]> {
-    return Array.from(this.users.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async updateUser(id: string, updateData: Partial<InsertUser>): Promise<User | undefined> {
-    const user = this.users.get(id);
-    if (!user) return undefined;
-
-    const updatedUser: User = { 
-      ...user, 
-      ...updateData,
-      updatedAt: new Date()
-    };
-    this.users.set(id, updatedUser);
-    return updatedUser;
-  }
-
-  async deleteUser(id: string): Promise<boolean> {
-    return this.users.delete(id);
-  }
-
-  // Admin methods
-  async getAdmins(): Promise<Admin[]> {
-    return Array.from(this.admins.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async getAdmin(id: string): Promise<Admin | undefined> {
-    return this.admins.get(id);
-  }
-
-  async getAdminByUserId(userId: string): Promise<Admin | undefined> {
-    return Array.from(this.admins.values()).find(admin => admin.userId === userId);
-  }
-
-  async createAdmin(insertAdmin: InsertAdmin): Promise<Admin> {
-    const id = randomUUID();
-    const now = new Date();
-    const admin: Admin = {
-      ...insertAdmin,
-      id,
-      status: insertAdmin.status || "active",
-      permissions: Array.isArray(insertAdmin.permissions) ? insertAdmin.permissions : [],
-      createdAt: now,
-      updatedAt: now
-    };
-    this.admins.set(id, admin);
-    return admin;
-  }
-
-  async updateAdmin(id: string, updateData: Partial<InsertAdmin>): Promise<Admin | undefined> {
-    const admin = this.admins.get(id);
-    if (!admin) return undefined;
-
-    const updatedAdmin: Admin = {
-      ...admin,
-      ...updateData,
-      permissions: Array.isArray(updateData.permissions) ? updateData.permissions : admin.permissions,
-      updatedAt: new Date()
-    };
-    this.admins.set(id, updatedAdmin);
-    return updatedAdmin;
-  }
-
-  async deleteAdmin(id: string): Promise<boolean> {
-    return this.admins.delete(id);
-  }
-
-  // Activity log methods
-  async getActivityLogs(): Promise<ActivityLog[]> {
-    return Array.from(this.activityLogs.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async getActivityLogsByAdmin(adminId: string): Promise<ActivityLog[]> {
-    return Array.from(this.activityLogs.values())
-      .filter(log => log.adminId === adminId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
-  async getActivityLogsByUser(userId: string): Promise<ActivityLog[]> {
-    return Array.from(this.activityLogs.values())
-      .filter(log => log.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
-  async createActivityLog(insertLog: InsertActivityLog): Promise<ActivityLog> {
-    const id = randomUUID();
-    const activityLog: ActivityLog = {
-      ...insertLog,
-      id,
-      adminId: insertLog.adminId || null,
-      userId: insertLog.userId || null,
-      entity: insertLog.entity || null,
-      entityId: insertLog.entityId || null,
-      details: insertLog.details || null,
-      ipAddress: insertLog.ipAddress || null,
-      userAgent: insertLog.userAgent || null,
-      createdAt: new Date()
-    };
-    this.activityLogs.set(id, activityLog);
-    return activityLog;
-  }
-
-  // System settings methods
-  async getSystemSettings(): Promise<SystemSetting[]> {
-    return Array.from(this.systemSettings.values()).sort((a, b) => 
-      new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-    );
-  }
-
-  async getSystemSettingsByCategory(category: string): Promise<SystemSetting[]> {
-    return Array.from(this.systemSettings.values())
-      .filter(setting => setting.category === category)
-      .sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
-  }
-
-  async getSystemSetting(key: string): Promise<SystemSetting | undefined> {
-    return Array.from(this.systemSettings.values()).find(setting => setting.key === key);
-  }
-
-  async createSystemSetting(insertSetting: InsertSystemSetting): Promise<SystemSetting> {
-    const id = randomUUID();
-    const now = new Date();
-    const setting: SystemSetting = {
-      ...insertSetting,
-      id,
-      description: insertSetting.description || null,
-      updatedBy: insertSetting.updatedBy || null,
-      createdAt: now,
-      updatedAt: now
-    };
-    this.systemSettings.set(id, setting);
-    return setting;
-  }
-
-  async updateSystemSetting(key: string, updateData: Partial<InsertSystemSetting>): Promise<SystemSetting | undefined> {
-    const setting = Array.from(this.systemSettings.values()).find(s => s.key === key);
-    if (!setting) return undefined;
-
-    const updatedSetting: SystemSetting = {
-      ...setting,
-      ...updateData,
-      updatedAt: new Date()
-    };
-    this.systemSettings.set(setting.id, updatedSetting);
-    return updatedSetting;
-  }
-
-  async deleteSystemSetting(key: string): Promise<boolean> {
-    const setting = Array.from(this.systemSettings.values()).find(s => s.key === key);
-    if (!setting) return false;
-    return this.systemSettings.delete(setting.id);
-  }
-
-  // Notification template methods
-  async getNotificationTemplates(): Promise<NotificationTemplate[]> {
-    return Array.from(this.notificationTemplates.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async getNotificationTemplate(id: string): Promise<NotificationTemplate | undefined> {
-    return this.notificationTemplates.get(id);
-  }
-
-  async createNotificationTemplate(insertTemplate: InsertNotificationTemplate): Promise<NotificationTemplate> {
-    const id = randomUUID();
-    const now = new Date();
-    const template: NotificationTemplate = {
-      ...insertTemplate,
-      id,
-      subject: insertTemplate.subject || null,
-      variables: Array.isArray(insertTemplate.variables) ? insertTemplate.variables : null,
-      active: insertTemplate.active ?? true,
-      createdAt: now,
-      updatedAt: now
-    };
-    this.notificationTemplates.set(id, template);
-    return template;
-  }
-
-  async updateNotificationTemplate(id: string, updateData: Partial<InsertNotificationTemplate>): Promise<NotificationTemplate | undefined> {
-    const template = this.notificationTemplates.get(id);
-    if (!template) return undefined;
-
-    const updatedTemplate: NotificationTemplate = {
-      ...template,
-      ...updateData,
-      variables: Array.isArray(updateData.variables) ? updateData.variables : template.variables,
-      updatedAt: new Date()
-    };
-    this.notificationTemplates.set(id, updatedTemplate);
-    return updatedTemplate;
-  }
-
-  async deleteNotificationTemplate(id: string): Promise<boolean> {
-    return this.notificationTemplates.delete(id);
-  }
-
-  // Notification methods
-  async getNotifications(): Promise<Notification[]> {
-    return Array.from(this.notifications.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
-  }
-
-  async getNotificationsByUser(userId: string): Promise<Notification[]> {
-    return Array.from(this.notifications.values())
-      .filter(notification => notification.userId === userId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }
-
-  async createNotification(insertNotification: InsertNotification): Promise<Notification> {
-    const id = randomUUID();
-    const notification: Notification = {
-      ...insertNotification,
-      id,
-      templateId: insertNotification.templateId || null,
-      subject: insertNotification.subject || null,
-      status: insertNotification.status || "pending",
-      sentAt: insertNotification.sentAt || null,
-      createdAt: new Date()
-    };
-    this.notifications.set(id, notification);
-    return notification;
-  }
-
-  async updateNotification(id: string, updateData: Partial<InsertNotification>): Promise<Notification | undefined> {
-    const notification = this.notifications.get(id);
-    if (!notification) return undefined;
-
-    const updatedNotification: Notification = {
-      ...notification,
-      ...updateData
-    };
-    this.notifications.set(id, updatedNotification);
-    return updatedNotification;
-  }
+  private blogPosts: BlogPost[] = [];
+  private contacts: Contact[] = [];
+  private quotes: Quote[] = [];
 
   // Project methods
   async getProjects(): Promise<Project[]> {
-    return Array.from(this.projects.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return this.projects;
   }
 
   async getFeaturedProjects(): Promise<Project[]> {
-    return Array.from(this.projects.values())
-      .filter(project => project.featured === 1)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.projects.filter(p => p.featured === 1);
   }
 
   async getProjectsByCategory(category: string): Promise<Project[]> {
-    return Array.from(this.projects.values())
-      .filter(project => project.category === category)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.projects.filter(p => p.category === category);
   }
 
   async getProject(id: string): Promise<Project | undefined> {
-    return this.projects.get(id);
+    return this.projects.find(p => p.id === id);
   }
 
-  async createProject(insertProject: InsertProject): Promise<Project> {
-    const id = randomUUID();
-    const project: Project = { 
-      ...insertProject, 
-      id, 
+  async createProject(project: InsertProject): Promise<Project> {
+    const newProject: Project = {
+      id: randomUUID(),
+      ...project,
       createdAt: new Date(),
-      caseStudyUrl: insertProject.caseStudyUrl || null,
-      featured: insertProject.featured || null,
-      technologies: Array.isArray(insertProject.technologies) ? insertProject.technologies as string[] : []
     };
-    this.projects.set(id, project);
-    return project;
+    this.projects.push(newProject);
+    return newProject;
   }
 
-  async updateProject(id: string, updateData: Partial<InsertProject>): Promise<Project | undefined> {
-    const project = this.projects.get(id);
-    if (!project) return undefined;
-
-    const updatedProject: Project = { 
-      ...project, 
-      ...updateData,
-      technologies: Array.isArray(updateData.technologies) ? updateData.technologies as string[] : project.technologies
-    };
-    this.projects.set(id, updatedProject);
-    return updatedProject;
+  async updateProject(id: string, project: Partial<InsertProject>): Promise<Project | undefined> {
+    const index = this.projects.findIndex(p => p.id === id);
+    if (index === -1) return undefined;
+    
+    this.projects[index] = { ...this.projects[index], ...project };
+    return this.projects[index];
   }
 
   async deleteProject(id: string): Promise<boolean> {
-    return this.projects.delete(id);
+    const index = this.projects.findIndex(p => p.id === id);
+    if (index === -1) return false;
+    
+    this.projects.splice(index, 1);
+    return true;
   }
 
   // Testimonial methods
   async getTestimonials(): Promise<Testimonial[]> {
-    return Array.from(this.testimonials.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return this.testimonials;
   }
 
   async getFeaturedTestimonials(): Promise<Testimonial[]> {
-    return Array.from(this.testimonials.values())
-      .filter(testimonial => testimonial.featured === 1)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.testimonials.filter(t => t.featured === 1);
   }
 
   async getTestimonial(id: string): Promise<Testimonial | undefined> {
-    return this.testimonials.get(id);
+    return this.testimonials.find(t => t.id === id);
   }
 
-  async createTestimonial(insertTestimonial: InsertTestimonial): Promise<Testimonial> {
-    const id = randomUUID();
-    const testimonial: Testimonial = { 
-      ...insertTestimonial, 
-      id, 
+  async createTestimonial(testimonial: InsertTestimonial): Promise<Testimonial> {
+    const newTestimonial: Testimonial = {
+      id: randomUUID(),
+      ...testimonial,
       createdAt: new Date(),
-      featured: insertTestimonial.featured || null,
-      avatarUrl: insertTestimonial.avatarUrl || null
     };
-    this.testimonials.set(id, testimonial);
-    return testimonial;
+    this.testimonials.push(newTestimonial);
+    return newTestimonial;
   }
 
-  async updateTestimonial(id: string, updateData: Partial<InsertTestimonial>): Promise<Testimonial | undefined> {
-    const testimonial = this.testimonials.get(id);
-    if (!testimonial) return undefined;
-
-    const updatedTestimonial: Testimonial = { ...testimonial, ...updateData };
-    this.testimonials.set(id, updatedTestimonial);
-    return updatedTestimonial;
+  async updateTestimonial(id: string, testimonial: Partial<InsertTestimonial>): Promise<Testimonial | undefined> {
+    const index = this.testimonials.findIndex(t => t.id === id);
+    if (index === -1) return undefined;
+    
+    this.testimonials[index] = { ...this.testimonials[index], ...testimonial };
+    return this.testimonials[index];
   }
 
   async deleteTestimonial(id: string): Promise<boolean> {
-    return this.testimonials.delete(id);
+    const index = this.testimonials.findIndex(t => t.id === id);
+    if (index === -1) return false;
+    
+    this.testimonials.splice(index, 1);
+    return true;
   }
 
   // Blog methods
   async getBlogPosts(): Promise<BlogPost[]> {
-    return Array.from(this.blogPosts.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return this.blogPosts;
   }
 
   async getPublishedBlogPosts(): Promise<BlogPost[]> {
-    return Array.from(this.blogPosts.values())
-      .filter(post => post.published === 1)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.blogPosts.filter(bp => bp.published === 1);
   }
 
   async getBlogPostsByCategory(category: string): Promise<BlogPost[]> {
-    return Array.from(this.blogPosts.values())
-      .filter(post => post.category === category && post.published === 1)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.blogPosts.filter(bp => bp.category === category && bp.published === 1);
   }
 
   async getBlogPost(id: string): Promise<BlogPost | undefined> {
-    return this.blogPosts.get(id);
+    return this.blogPosts.find(bp => bp.id === id);
   }
 
   async getBlogPostBySlug(slug: string): Promise<BlogPost | undefined> {
-    return Array.from(this.blogPosts.values()).find(post => post.slug === slug);
+    return this.blogPosts.find(bp => bp.slug === slug);
   }
 
-  async createBlogPost(insertBlogPost: InsertBlogPost): Promise<BlogPost> {
-    const id = randomUUID();
-    const now = new Date();
-    const blogPost: BlogPost = { 
-      ...insertBlogPost, 
-      id, 
-      createdAt: now,
-      updatedAt: now,
-      imageUrl: insertBlogPost.imageUrl || null,
-      tags: Array.isArray(insertBlogPost.tags) ? insertBlogPost.tags as string[] : null,
-      published: insertBlogPost.published || null
-    };
-    this.blogPosts.set(id, blogPost);
-    return blogPost;
-  }
-
-  async updateBlogPost(id: string, updateData: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
-    const blogPost = this.blogPosts.get(id);
-    if (!blogPost) return undefined;
-
-    const updatedBlogPost: BlogPost = { 
-      ...blogPost, 
-      ...updateData, 
+  async createBlogPost(blogPost: InsertBlogPost): Promise<BlogPost> {
+    const newBlogPost: BlogPost = {
+      id: randomUUID(),
+      ...blogPost,
+      createdAt: new Date(),
       updatedAt: new Date(),
-      tags: Array.isArray(updateData.tags) ? updateData.tags as string[] : blogPost.tags
     };
-    this.blogPosts.set(id, updatedBlogPost);
-    return updatedBlogPost;
+    this.blogPosts.push(newBlogPost);
+    return newBlogPost;
+  }
+
+  async updateBlogPost(id: string, blogPost: Partial<InsertBlogPost>): Promise<BlogPost | undefined> {
+    const index = this.blogPosts.findIndex(bp => bp.id === id);
+    if (index === -1) return undefined;
+    
+    this.blogPosts[index] = { 
+      ...this.blogPosts[index], 
+      ...blogPost, 
+      updatedAt: new Date() 
+    };
+    return this.blogPosts[index];
   }
 
   async deleteBlogPost(id: string): Promise<boolean> {
-    return this.blogPosts.delete(id);
+    const index = this.blogPosts.findIndex(bp => bp.id === id);
+    if (index === -1) return false;
+    
+    this.blogPosts.splice(index, 1);
+    return true;
   }
 
   // Contact methods
   async getContacts(): Promise<Contact[]> {
-    return Array.from(this.contacts.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return this.contacts;
   }
 
   async getContact(id: string): Promise<Contact | undefined> {
-    return this.contacts.get(id);
+    return this.contacts.find(c => c.id === id);
   }
 
-  async createContact(insertContact: InsertContact): Promise<Contact> {
-    const id = randomUUID();
-    const contact: Contact = { 
-      ...insertContact, 
-      id, 
+  async createContact(contact: InsertContact): Promise<Contact> {
+    const newContact: Contact = {
+      id: randomUUID(),
+      ...contact,
       status: "new",
       createdAt: new Date(),
-      company: insertContact.company || null,
-      service: insertContact.service || null,
-      budget: insertContact.budget || null,
-      timeline: insertContact.timeline || null
     };
-    this.contacts.set(id, contact);
-    return contact;
+    this.contacts.push(newContact);
+    return newContact;
   }
 
-  async updateContact(id: string, updateData: Partial<InsertContact>): Promise<Contact | undefined> {
-    const contact = this.contacts.get(id);
-    if (!contact) return undefined;
-
-    const updatedContact: Contact = { ...contact, ...updateData };
-    this.contacts.set(id, updatedContact);
-    return updatedContact;
+  async updateContact(id: string, contact: Partial<InsertContact>): Promise<Contact | undefined> {
+    const index = this.contacts.findIndex(c => c.id === id);
+    if (index === -1) return undefined;
+    
+    this.contacts[index] = { ...this.contacts[index], ...contact };
+    return this.contacts[index];
   }
 
   async deleteContact(id: string): Promise<boolean> {
-    return this.contacts.delete(id);
+    const index = this.contacts.findIndex(c => c.id === id);
+    if (index === -1) return false;
+    
+    this.contacts.splice(index, 1);
+    return true;
   }
 
   // Quote methods
   async getQuotes(): Promise<Quote[]> {
-    return Array.from(this.quotes.values()).sort((a, b) => 
-      new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()
-    );
+    return this.quotes;
   }
 
   async getQuotesByContact(contactId: string): Promise<Quote[]> {
-    return Array.from(this.quotes.values())
-      .filter(quote => quote.contactId === contactId)
-      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+    return this.quotes.filter(q => q.contactId === contactId);
   }
 
   async getQuote(id: string): Promise<Quote | undefined> {
-    return this.quotes.get(id);
+    return this.quotes.find(q => q.id === id);
   }
 
-  async createQuote(insertQuote: InsertQuote): Promise<Quote> {
-    const id = randomUUID();
-    const quote: Quote = { 
-      ...insertQuote, 
-      id, 
+  async createQuote(quote: InsertQuote): Promise<Quote> {
+    const newQuote: Quote = {
+      id: randomUUID(),
+      ...quote,
       status: "pending",
       createdAt: new Date(),
-      contactId: insertQuote.contactId || null,
-      amount: null
     };
-    this.quotes.set(id, quote);
-    return quote;
+    this.quotes.push(newQuote);
+    return newQuote;
   }
 
-  async updateQuote(id: string, updateData: Partial<InsertQuote>): Promise<Quote | undefined> {
-    const quote = this.quotes.get(id);
-    if (!quote) return undefined;
-
-    const updatedQuote: Quote = { ...quote, ...updateData };
-    this.quotes.set(id, updatedQuote);
-    return updatedQuote;
+  async updateQuote(id: string, quote: Partial<InsertQuote>): Promise<Quote | undefined> {
+    const index = this.quotes.findIndex(q => q.id === id);
+    if (index === -1) return undefined;
+    
+    this.quotes[index] = { ...this.quotes[index], ...quote };
+    return this.quotes[index];
   }
 
   async deleteQuote(id: string): Promise<boolean> {
-    return this.quotes.delete(id);
+    const index = this.quotes.findIndex(q => q.id === id);
+    if (index === -1) return false;
+    
+    this.quotes.splice(index, 1);
+    return true;
   }
 }
 
-export const storage = new MemStorage();
+export const storage: IStorage = new MemStorage();
