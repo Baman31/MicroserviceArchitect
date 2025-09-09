@@ -31,18 +31,6 @@ import TermsOfService from "@/pages/terms-of-service";
 import CookiePolicy from "@/pages/cookie-policy";
 import AnalyticsDashboard from "@/pages/analytics-dashboard";
 import Booking from "@/pages/booking";
-import TestimonialsAdmin from "@/pages/admin/testimonials";
-import AdminLayout from "@/components/layout/admin-layout";
-import AdminDashboard from "@/pages/admin/admin-dashboard";
-import UserManagement from "@/pages/admin/user-management";
-import AdminManagement from "@/pages/admin/admin-management";
-import SystemSettings from "@/pages/admin/system-settings";
-import Communications from "@/pages/admin/communications";
-import ContentManagement from "@/pages/admin/content-management";
-import AdminAnalytics from "@/pages/admin/admin-analytics";
-import ActivityLogs from "@/pages/admin/activity-logs";
-import { AdminLogin } from "@/pages/admin/admin-login";
-import { ProtectedAdminRoute } from "@/components/auth/protected-admin-route";
 import NotFound from "@/pages/not-found";
 
 function Router() {
@@ -50,26 +38,6 @@ function Router() {
   
   return (
     <Switch>
-      {/* Admin Login Route - Hidden Path */}
-      <Route path="/admin/login" component={AdminLogin} />
-      
-      {/* Admin Routes - Protected */}
-      <Route path="/admin" nest>
-        <ProtectedAdminRoute>
-          <AdminLayout>
-            <Route path="/" component={AdminDashboard} />
-            <Route path="/users" component={UserManagement} />
-            <Route path="/admins" component={AdminManagement} />
-            <Route path="/settings" component={SystemSettings} />
-            <Route path="/communications" component={Communications} />
-            <Route path="/content" component={ContentManagement} />
-            <Route path="/analytics" component={AdminAnalytics} />
-            <Route path="/activity-logs" component={ActivityLogs} />
-            <Route path="/testimonials" component={TestimonialsAdmin} />
-            <Route path="/blog" component={() => <div className="p-6">Blog Management Page</div>} />
-          </AdminLayout>
-        </ProtectedAdminRoute>
-      </Route>
 
       {/* Public Routes */}
       <Route>
